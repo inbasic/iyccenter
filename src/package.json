@@ -1,0 +1,183 @@
+{
+  "name": "iyccenter",
+  "title": "YouTube Control Center",
+  "id": "jid1-CikLKKPVkw6ipw",
+  "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
+  "author": "InBasic",
+  "license": "MPL 2.0",
+  "version": "0.1b1",
+  
+  
+  "preferences": [{
+    "name": "quality",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 6,
+    "options": [
+      {"value": "0", "label": "small"},
+      {"value": "1", "label": "medium"},
+      {"value": "2", "label": "large"},
+      {"value": "3", "label": "hd720"},
+      {"value": "4", "label": "hd1080"},
+      {"value": "5", "label": "highres"},
+      {"value": "6", "label": "default"}
+    ]
+  },
+  {
+    "name": "volume",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 80,
+    "options": [
+      {"value": "0", "label": "0"},
+      {"value": "10", "label": "10"},
+      {"value": "20", "label": "20"},
+      {"value": "30", "label": "30"},
+      {"value": "40", "label": "40"},
+      {"value": "50", "label": "50"},
+      {"value": "60", "label": "60"},
+      {"value": "70", "label": "70"},
+      {"value": "80", "label": "80"},
+      {"value": "90", "label": "90"},
+      {"value": "100", "label": "100"}
+    ]
+  },
+  {
+    "name": "sidebar",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "discussion",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "views",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "actions",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "details",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "onePlayer",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "autoplay",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "autobuffer",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "annotations",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "controls",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "autohide",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "loop",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "loopDelay",
+    "title": "",
+    "type": "integer",
+    "value": 2
+  },
+  {
+    "name": "disablekb",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "fs",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "rel",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "theme",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 0,
+    "options": [
+      {"value": "0", "label": "dark"},
+      {"value": "1", "label": "light"}
+    ]
+  },
+  {
+    "name": "color",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 0,
+    "options": [
+      {"value": "0", "label": "red"},
+      {"value": "1", "label": "white"}
+    ]
+  },
+  {
+    "name": "skipads",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "forceVisible",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },  
+  {
+    "name": "clearLog",
+    "type": "control",
+    "label": "",
+    "title": ""
+  }]
+}

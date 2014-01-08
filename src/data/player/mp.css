@@ -1,0 +1,184 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+html {
+  height: 100%;
+}
+body {
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  font-family: "Open Sans";
+  width: calc(100% - 10px);
+  margin: 5px;
+  overflow: hidden;
+  background-color: #fff;
+  -moz-user-select: none;
+  height: calc(100% - 10px);
+  cursor: default;
+}
+/* Controls */
+#controls {
+  display: -moz-box;
+  -moz-box-align: center;
+  padding: 5px;
+}
+#controls i {
+  display: block;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 1px;
+  width: 32px;
+  height: 32px;
+  margin-right: 3px;
+}
+#controls #play-button {
+  background: -moz-image-rect(url(controls-48.png), 0, 48, 48, 0) center no-repeat;
+  width: 48px;
+  height: 48px;
+}
+#controls #play-button[paused=true] {
+  background: -moz-image-rect(url(controls-48.png), 0, 96, 48, 48) center no-repeat;
+}
+#controls #previous-button {
+  display: none;
+  background: -moz-image-rect(url(controls-32.png), 0, 32, 32, 0) center no-repeat;
+}
+#controls #stop-button {
+  background: -moz-image-rect(url(controls-32.png), 0, 64, 32, 32) center no-repeat;
+}
+#controls #next-button {
+  display: none;
+  background: -moz-image-rect(url(controls-32.png), 0, 96, 32, 64) center no-repeat;
+}
+#controls #previous-list {
+  margin-left: 10px;
+  background: -moz-image-rect(url(controls-32.png), 0, 160, 32, 128) center no-repeat;
+}
+#controls #previous-list[disabled=true]{
+  opacity: 0.3;
+}
+#controls #next-list {
+  background: -moz-image-rect(url(controls-32.png), 0, 192, 32, 160) center no-repeat;
+}
+#controls #next-list[disabled=true] {
+  opacity: 0.3;
+}
+#controls #volume-down {
+  margin-left: 10px;
+  background: -moz-image-rect(url(controls-32.png), 0, 256, 32, 224) center no-repeat;
+}
+#controls #volume-up {
+  background: -moz-image-rect(url(controls-32.png), 0, 224, 32, 192) center no-repeat;
+}
+#controls div {
+  display: -moz-box;
+  -moz-box-flex: 1.0;
+  -moz-box-pack: end;
+}
+#controls #settings-button {
+  background: -moz-image-rect(url(controls-48.png), 0, 144, 48, 96) center no-repeat;
+  width: 48px;
+  height: 48px;
+}
+#controls i:hover:not([disabled=true])  {
+  opacity: 1.0;
+}
+/* Play List */
+#play-list {
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-flex: 1.0;
+}
+#history {
+  width: 100%;
+}
+#history tr {
+  background: rgba(243, 243, 243, 0.85);
+  color: #222222;
+  outline: thin solid transparent;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 24px;
+  display: none;
+}
+#history tr.over {
+  outline: thin solid #999999;
+}
+#history tr.over-initiated {
+  opacity: 0.4;
+}
+#history td:not(:nth-child(6)) {  /* 6th child is close button */
+  pointer-events:none;
+}
+#history td:nth-child(1) {  /* move */
+  width: 6px;
+  cursor: move;
+  display: none;
+}
+#history tr:hover td:nth-child(1) {
+  background: url("grippy_large.png");
+}
+#history td:nth-child(2) {  /* play */
+  width: 12px;
+  opacity: 0.4;
+}
+#history tr:not([playing="null"]) td:nth-child(2) {
+  background: -moz-image-rect(url(controls-12.png), 0, 36, 12, 27) center no-repeat;
+}
+#history tr:hover td:nth-child(2) {
+  background: -moz-image-rect(url(controls-12.png), 0, 27, 12, 18) center no-repeat;
+}
+#history tr[playing="1"] td:nth-child(2) {
+  background: -moz-image-rect(url(controls-12.png), 0, 18, 12, 9) center no-repeat;
+}
+#history tr[playing="2"] td:nth-child(2) {
+  background: -moz-image-rect(url(controls-12.png), 0, 9, 12, 0) center no-repeat;
+}
+#history td:nth-child(3) {  /* title */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+#history td:nth-child(4) {  /* duration */
+  width: 80px;
+  max-width: 80px;
+  text-align: center;
+}
+#history tr td:nth-child(5) {
+  display: none;
+  width: 20px;
+  opacity: 0.4;
+}
+#history tr[type=history] td:nth-child(5) {  /* type */
+  display: table-cell;
+  background: -moz-image-rect(url(history.png), 0, 12, 12, 0) center no-repeat;
+}
+#history tr[type=internet] td:nth-child(5) {
+  display: table-cell;
+  background: -moz-image-rect(url(history.png), 0, 24, 12, 12) center no-repeat;
+}
+#history td:nth-child(6) {  /* close */
+  width: 20px;
+}
+#history tr:hover td:nth-child(6) {
+  background: url('close.png') no-repeat center;
+}
+/* Search Box */
+#search-div {
+  display: -moz-box;
+  -moz-box-pack: end;
+  -moz-box-align: center;
+}
+#search-div input {
+  border: solid 1px rgba(48,184,237,0.7);
+  width: 200px;
+  padding: 3px;
+  border-radius: 2px;
+  padding-right: 24px;
+  background: url('search.png') no-repeat calc(100% - 4px) center;
+}
+#search-div input:focus {
+  border: solid 1px rgba(48,184,237,1);
+}
+#search-div input[loading] {
+  background-image: url('load.gif')
+}
