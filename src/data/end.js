@@ -76,5 +76,3 @@ self.port.on("play", () => player.play());
 self.port.on("pause", () => player.pause());
 self.port.on("stop", () => player.stop());
 self.port.on("volume", (v) => player.setVolume(v));
-
-console.error("end.js")

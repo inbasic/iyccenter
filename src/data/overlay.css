@@ -1,3 +1,17 @@
 #iycenter {
-  list-style-image: url('toolbar.png') !important;
+  list-style-image: url('toolbar-16.png') !important;
+}
+/** Australis **/
+#iycenter[cui-areatype="menu-panel"],
+toolbarpaletteitem[place="palette"] > #iycenter {
+  list-style-image: url('toolbar-32.png') !important;
+}
+/** Retina Display **/
+@media (min-resolution: 2dppx) {
+  #iycenter {
+    list-style-image: url('toolbar-32.png') !important;
+  }
+  #iycenter image {
+    width: 16px;
+  }
 }
