@@ -23,7 +23,8 @@
       {"value": "0", "label": "default"},
       {"value": "1", "label": "mp"},
       {"value": "2", "label": "pauseall"},
-      {"value": "3", "label": "play"}
+      {"value": "3", "label": "play"},
+      {"value": "4", "label": "skip"}
     ]
   },
   {
@@ -36,7 +37,8 @@
       {"value": "0", "label": "default"},
       {"value": "1", "label": "mp"},
       {"value": "2", "label": "pauseall"},
-      {"value": "3", "label": "play"}
+      {"value": "3", "label": "play"},
+      {"value": "4", "label": "skip"}
     ]
   },
   {

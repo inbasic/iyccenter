@@ -183,6 +183,10 @@ mp.port.on("volume", function (v) {
   workers.get().forEach((w) => w.port.emit("volume", prefs.volume));
   notify(_("msg1") + " " + prefs.volume + "%");
 });
+function skip () {
+  var worker = workers.get().filter(w => w.state === 1).forEach(w => w.port.emit("skip"))
+}
+mp.port.on("skip", skip);
 mp.port.on("kill", function (id) {
   storage.kill(id).then(mp.update);
   var tab = workers.get().reduce((p, c) => p || (c && c.id == id ? c.tab : null), null);
@@ -207,6 +211,7 @@ button = toolbarbutton.ToolbarButton({
       case 1:  return mp.show(tbb);
       case 2:  return pauseAll();
       case 3:  return play();
+      case 4:  return skip();
     }
   },
   onContext: function (e, tbb) {
@@ -218,6 +223,7 @@ button = toolbarbutton.ToolbarButton({
       case 1:  return mp.show(tbb);
       case 2:  return pauseAll();
       case 3:  return play();
+      case 4:  return skip();
     }
   }
 });

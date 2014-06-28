@@ -74,7 +74,7 @@ exports.ToolbarButton = function (options) {
     set state(value) {
       button.instances.forEach(function (i) {
         var tbb = i.anchor.ownerDocument.defaultView.document.getElementById(options.id);
-        console.error(value, !value)
+        if (!tbb) return;
         if (value) {
           tbb.setAttribute("state", value);
         }

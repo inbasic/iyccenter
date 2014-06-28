@@ -19,6 +19,7 @@ function youtube (callback, pointer) {
     var extend = {
       getAvailableQualityLevels: p.getAvailableQualityLevels,
       getDuration: () => p.getDuration(),
+      nextVideo: () => p.nextVideo(),
       getTitle: () => title(),
       getVideoUrl: () => p.getVideoUrl(),
       loadVideoById: (id) => p.loadVideoById(id),
@@ -86,3 +87,4 @@ self.port.on("play", () => player.play());
 self.port.on("pause", () => player.pause());
 self.port.on("stop", () => player.stop());
 self.port.on("volume", (v) => player.setVolume(v));
+self.port.on("skip", () => player.nextVideo());
