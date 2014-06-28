@@ -27,32 +27,10 @@ exports.ToolbarButton = function (options) {
           return true;
         });
       }
-      if (options.panel) {
-        tbb.addEventListener("contextmenu", function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-          try {
-            options.panel.show(tbb);
-          }
-          catch (e) {
-            options.panel.show(null, tbb);
-          }
-        }, true);
-      }
       if (options.onContext) {
-        const NS_XUL = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-        
-        let doc = tbb.ownerDocument.defaultView.document;
-        let menupopup = doc.createElementNS(NS_XUL, "menupopup");
-        let menuitem = doc.createElementNS(NS_XUL, "menuitem");
-        let menuseparator = doc.createElementNS(NS_XUL, "menuseparator");
         tbb.addEventListener("contextmenu", function (e) {
-          e.stopPropagation(); //Prevent Firefox context menu
-          e.preventDefault();
-          options.onContext(e, menupopup, menuitem, menuseparator);
-          menupopup.openPopup(tbb , "after_end", 0, 0, false);
+          options.onContext(e, tbb);
         }, true);
-        tbb.appendChild(menupopup);
       }
     }
   }
@@ -93,28 +71,15 @@ exports.ToolbarButton = function (options) {
         tbb.setAttribute("tooltiptext", value);
       });
     },
-    get saturate() options.saturate,
-    set saturate(value) {
-      options.saturate = value;
+    set state(value) {
       button.instances.forEach(function (i) {
         var tbb = i.anchor.ownerDocument.defaultView.document.getElementById(options.id);
-        
-        if (!value) {
-          tbb.setAttribute("type", "gray");
+        console.error(value, !value)
+        if (value) {
+          tbb.setAttribute("state", value);
         }
         else {
-          tbb.removeAttribute("type");
-        }
-      });
-    },
-    set progress(value) {
-      button.instances.forEach(function (i) {
-        var tbb = i.anchor.ownerDocument.defaultView.document.getElementById(options.id);
-        if (!value) {
-          tbb.removeAttribute("progress");
-        }
-        else {
-          tbb.setAttribute("progress", (value * 8).toFixed(0));
+          tbb.removeAttribute("state");
         }
       });
     },

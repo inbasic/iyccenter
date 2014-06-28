@@ -68,6 +68,7 @@ var workers = (function () {
     detach: function (worker) {
       var i = cache.indexOf(worker);
       if (i !== -1) cache.splice(i, 1);
+      button.update(cache.map(c => c.state));
     },
     update: function (worker, id, state) {
       var i = cache.indexOf(worker);
@@ -76,6 +77,7 @@ var workers = (function () {
         if (state) cache[i].state = state;
         if (state === 1) mp.offset = 0;
         mp.update();
+        button.update(cache.map(c => c.state));
       }
     },
     get: () => cache
@@ -149,17 +151,17 @@ mp.port.on("search", function (q) {
     debug
   );
 });
-mp.port.on("pause-all", function () {
-  workers.get().forEach((w) => w.port.emit("pause"));
-});
+
+function pauseAll() workers.get().forEach((w) => w.port.emit("pause"));
+mp.port.on("pause-all", pauseAll);
 mp.port.on("stop-all", function () {
   workers.get().forEach((w) => w.port.emit("stop"));
 });
-mp.port.on("play", function (id) {
-  var worker = workers.get().reduce((p, c) => p || (c && c.id === id ? c : null), null);
+function play (id) {
+  var worker = workers.get().reduce((p, c) => p || (c && c.id === id ? c : null), null) || workers.get()[0];
   if (worker) return worker.port.emit("play");
   for each (var tab in tabs) {
-    if(/youtube\.com\/watch\?v\=/.test(tab.url)) {
+    if(/youtube\.com\/watch\?v\=/.test(tab.url) && id) {
       tab.options = {autoplay: true};
       return tab.attach({
         contentScript: 'window.location.replace("watch?v=' + id + '&autoplay=1");'
@@ -169,7 +171,8 @@ mp.port.on("play", function (id) {
   tabs.open({
     url: id ? c.play.url + id + "&autoplay=1": c.play.def,
   });
-});
+}
+mp.port.on("play", play);
 mp.port.on("pause", function (id) {
   var worker = workers.get().reduce((p, c) => p || (c && c.id == id ? c : null), null);
   if (worker) worker.port.emit("pause");
@@ -190,13 +193,37 @@ mp.port.on("settings", function () {
   mp.hide();
 });
 /** Toolbar Button **/
-var button = toolbarbutton.ToolbarButton({
+button = toolbarbutton.ToolbarButton({
   id: c.toolbar.id,
   label: _("toolbar"),
   tooltiptext: _("tooltip"),
   panel: mp,
-  onCommand: (e, tbb) => mp.show(tbb)
+  onCommand: (e, tbb) => mp.show(tbb),
+  onClick: function (e, tbb) {
+    if (e.button != 1) return;
+    e.stopPropagation();
+    e.preventDefault();
+    switch (prefs.middle) {
+      case 1:  return mp.show(tbb);
+      case 2:  return pauseAll();
+      case 3:  return play();
+    }
+  },
+  onContext: function (e, tbb) {
+    if (prefs.context) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    switch (prefs.context) {
+      case 1:  return mp.show(tbb);
+      case 2:  return pauseAll();
+      case 3:  return play();
+    }
+  }
 });
+button.update = function (states) {
+  button.state = states.reduce((p, c) =>  (c === 1 ? c : null) || p || (c === 2 ? c : null), null);
+}
 /** YouTube Search **/
 function search (q, num) {
   var d = new Promise.defer();
@@ -267,7 +294,6 @@ function welcome () {
     prefs.newVer = "";
   }, c.extension.time);
 }
-
 
 /** Notifier **/
 var notify = (function () {

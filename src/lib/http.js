@@ -38,7 +38,7 @@ TracingListener.prototype = {
         if (!prefs.rel) c = '"rel": 0, ' + c;
         if (prefs.theme == "1") c = '"theme": "light", ' + c;  
         if (prefs.color == "1") c = '"color": "white", ' + c;
-        
+
         return a.replace(b, c);
       });
     }

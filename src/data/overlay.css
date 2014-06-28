@@ -1,16 +1,44 @@
-#iycenter {
-  list-style-image: url('toolbar-16.png') !important;
+#iycenter,
+#iycenter[state="0"] {
+  list-style-image: url('icon-16.png') !important;
+  -moz-image-region: rect(0, 48px, 16px, 32px);
+}
+#iycenter[state="1"] {
+  -moz-image-region: rect(0, 32px, 16px, 16px);
+}
+#iycenter[state="2"] {
+  -moz-image-region: rect(0, 16px, 16px, 0);
 }
 /** Australis **/
 #iycenter[cui-areatype="menu-panel"],
-toolbarpaletteitem[place="palette"] > #iycenter {
-  list-style-image: url('toolbar-32.png') !important;
+toolbarpaletteitem[place="palette"] > #iycenter,
+#iycenter[cui-areatype="menu-panel"][state="0"],
+toolbarpaletteitem[place="palette"] > #iycenter[state="0"] {
+  list-style-image: url('icon-32.png') !important;
+  -moz-image-region: rect(0, 96px, 32px, 64px);
+}
+#iycenter[cui-areatype="menu-panel"][state="1"],
+toolbarpaletteitem[place="palette"] > #iycenter[state="1"] {
+  -moz-image-region: rect(0, 64px, 32px, 32px);
+}
+#iycenter[cui-areatype="menu-panel"][state="2"],
+toolbarpaletteitem[place="palette"] > #iycenter[state="2"] {
+  -moz-image-region: rect(0, 32px, 32px, 0);
 }
 /** Retina Display **/
 @media (min-resolution: 2dppx) {
-  #iycenter {
-    list-style-image: url('toolbar-32.png') !important;
+  #iycenter,
+  #iycenter[state="0"] {
+    list-style-image: url('icon-32.png') !important;
+    -moz-image-region: rect(0, 96px, 32px, 64px);
   }
+  #iycenter[state="1"] {
+    -moz-image-region: rect(0, 64px, 32px, 32px);
+  }
+  #iycenter[state="2"] {
+    -moz-image-region: rect(0, 32px, 32px, 0);
+  }
+  
   #iycenter image {
     width: 16px;
   }

@@ -34,7 +34,7 @@ function youtube (callback, pointer) {
       },
       quality: function (val) {
         var levels = p.getAvailableQualityLevels();
-        p.setPlaybackQuality(levels.indexOf(val) != -1 ? val : levels[0])
+        p.setPlaybackQuality(levels.indexOf(val) != -1 ? val : "default");
       }
     }
     return extend;
@@ -52,6 +52,9 @@ self.port.on("options", function(options) {
       ["small", "medium", "large", "hd720", "hd1080", "highres", "default"][+self.options.prefs.quality]
     );
     player.setVolume(+self.options.prefs.volume);
+    if (!self.options.prefs.autoplay) { // HTML 5 player only
+      player.stop();
+    }
     if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
       player.play();
       player.pause();
@@ -66,9 +69,16 @@ self.port.on("options", function(options) {
     });
     //This function is called by YouTube player to report changes in the playing state
     unsafeWindow.iycenterListener = function (e) {
+      console.error('state', e)
       self.port.emit("onStateChange", id(), e);
     }
     player.addEventListener("onStateChange", "iycenterListener");
+    //Show more details
+    if (self.options.prefs.moreDetails) {
+      var evObj = document.createEvent('MouseEvents');
+      evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null );
+      if ($("watch-description-toggle")) $("watch-description-toggle").dispatchEvent(evObj);
+    }
   });
 });
 

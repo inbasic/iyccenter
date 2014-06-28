@@ -5,13 +5,77 @@
   "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
   "author": "InBasic",
   "license": "MPL 2.0",
-  "version": "0.2",
+  "version": "0.3b1",
   
   "permissions": {
-    "unsafe-content-script": true
+    "unsafe-content-script": true,
+    "private-browsing": true
   },
     
-  "preferences": [{
+  "preferences": [
+  {
+    "name": "context",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 0,
+    "options": [
+      {"value": "0", "label": "default"},
+      {"value": "1", "label": "mp"},
+      {"value": "2", "label": "pauseall"},
+      {"value": "3", "label": "play"}
+    ]
+  },
+  {
+    "name": "middle",
+    "title": "",
+    "description": "",
+    "type": "menulist",
+    "value": 0,
+    "options": [
+      {"value": "0", "label": "default"},
+      {"value": "1", "label": "mp"},
+      {"value": "2", "label": "pauseall"},
+      {"value": "3", "label": "play"}
+    ]
+  },
+  {
+    "name": "sidebar",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "discussion",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "views",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "actions",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "moreDetails",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "annotations",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
     "name": "quality",
     "title": "",
     "description": "",
@@ -48,42 +112,6 @@
     ]
   },
   {
-    "name": "sidebar",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "discussion",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "views",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "actions",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "details",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "onePlayer",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
     "name": "autoplay",
     "title": "",
     "type": "bool",
@@ -94,12 +122,6 @@
     "title": "",
     "type": "bool",
     "value": false
-  },
-  {
-    "name": "annotations",
-    "title": "",
-    "type": "bool",
-    "value": true
   },
   {
     "name": "controls",
@@ -164,6 +186,12 @@
       {"value": "0", "label": "red"},
       {"value": "1", "label": "white"}
     ]
+  },
+  {
+    "name": "onePlayer",
+    "title": "",
+    "type": "bool",
+    "value": true
   },
   {
     "name": "skipads",

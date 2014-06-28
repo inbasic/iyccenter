@@ -119,29 +119,10 @@ exports.ToolbarButton = function ToolbarButton(options) {
           options.onClick(e, tbb);
         }, true);
       }
-      if (options.panel) {
-        tbb.addEventListener("contextmenu", function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-          try {
-            options.panel.show(tbb);
-          }
-          catch (e) {
-            options.panel.show(null, tbb);
-          }
-        }, true);
-      }
       if (options.onContext) {
-        let menupopup = doc.createElementNS(NS_XUL, "menupopup");
-        let menuitem = doc.createElementNS(NS_XUL, "menuitem");
-        let menuseparator = doc.createElementNS(NS_XUL, "menuseparator");
         tbb.addEventListener("contextmenu", function (e) {
-          e.stopPropagation(); //Prevent Firefox context menu
-          e.preventDefault();
-          options.onContext(e, menupopup, menuitem, menuseparator);
-          menupopup.openPopup(tbb , "after_end", 0, 0, false);
+          options.onContext(e, tbb);
         }, true);
-        tbb.appendChild(menupopup);
       }
       // add toolbarbutton to palette
       ($("navigator-toolbox") || $("mail-toolbox")).palette.appendChild(tbb);
@@ -206,33 +187,18 @@ exports.ToolbarButton = function ToolbarButton(options) {
     onUntrack: function (window) {}
   };
   var tracker = winUtils.WindowTracker(delegate);
-  
-  function setProgress(aOptions) {
+  function setState(aOptions) {
     getToolbarButtons(function(tbb) {
-      if (!aOptions.progress) {
-        tbb.removeAttribute("progress");
+      if (aOptions.value) {
+        tbb.setAttribute("state", aOptions.value);
       }
       else {
-        tbb.setAttribute("progress", (aOptions.progress * 8).toFixed(0));
+        tbb.removeAttribute("state");
       }
     }, options.id);
-    return aOptions.progress;
-  }
-  function setSaturate(aOptions) {
-    getToolbarButtons(function(tbb) {
-      if (!aOptions.value) {
-        tbb.setAttribute("type", "gray");
-      }
-      else {
-        tbb.removeAttribute("type");
-      }
-    }, options.id);
-    options.saturate = aOptions.value;
     return aOptions.value;
   }
-  
-  
-  
+
   return {
     destroy: function() {
       if (destroyed) return;
@@ -289,9 +255,9 @@ exports.ToolbarButton = function ToolbarButton(options) {
       }, options.id);
       return value;
     },
-    set progress(value) setProgress({progress: value}),
-    set saturate(value) setSaturate({value: value}),
-    get saturate() options.saturate,
+    set state (value) {
+      setState({value: value});
+    }
     get tooltiptext() options.tooltiptext,
     set tooltiptext(value) {
       options.tooltiptext = value;
