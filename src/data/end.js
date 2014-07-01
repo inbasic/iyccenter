@@ -46,45 +46,51 @@ function youtube (callback, pointer) {
     callback.call(pointer);
   }
 }
-
-self.port.on("options", function(options) {
-  youtube(function () {
-    player.quality (
-      ["small", "medium", "large", "hd720", "hd1080", "highres", "default"][+self.options.prefs.quality]
-    );
-    player.setVolume(+self.options.prefs.volume);
-    if (!self.options.prefs.autoplay) { // HTML 5 player only
-      player.stop();
-    }
-    if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
-      player.play();
-      player.pause();
-    } 
-    if (location().contains("autoplay=1")) {
-      player.play();
-    }
-    self.port.emit("info", {
-      duration: player.getDuration(),
-      title: player.getTitle(),
-      id: id()
+if (window.top === window) {
+  self.port.on("options", function(options) {
+    youtube(function () {
+      player.quality (
+        ["small", "medium", "large", "hd720", "hd1080", "highres", "default"][+self.options.prefs.quality]
+      );
+      player.setVolume(+self.options.prefs.volume);
+      if (!self.options.prefs.autoplay && self.options.prefs.fnautoplay) { // HTML 5 player only
+        player.stop();
+      }
+      if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
+        player.play();
+        player.pause();
+      } 
+      if (location().contains("autoplay=1")) {
+        player.play();
+      }
+      self.port.emit("info", {
+        duration: player.getDuration(),
+        title: player.getTitle(),
+        id: id()
+      });
+      //This function is called by YouTube player to report changes in the playing state
+      unsafeWindow.iycenterListener = function (e) {
+        self.port.emit("onStateChange", id(), e);
+      }
+      player.addEventListener("onStateChange", "iycenterListener");
+      //Show more details
+      if (self.options.prefs.moreDetails) {
+        var evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null );
+        if ($("watch-description-toggle")) $("watch-description-toggle").dispatchEvent(evObj);
+      }
     });
-    //This function is called by YouTube player to report changes in the playing state
-    unsafeWindow.iycenterListener = function (e) {
-      console.error('state', e)
-      self.port.emit("onStateChange", id(), e);
-    }
-    player.addEventListener("onStateChange", "iycenterListener");
-    //Show more details
-    if (self.options.prefs.moreDetails) {
-      var evObj = document.createEvent('MouseEvents');
-      evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null );
-      if ($("watch-description-toggle")) $("watch-description-toggle").dispatchEvent(evObj);
-    }
   });
-});
-
-self.port.on("play", () => player.play());
-self.port.on("pause", () => player.pause());
-self.port.on("stop", () => player.stop());
-self.port.on("volume", (v) => player.setVolume(v));
-self.port.on("skip", () => player.nextVideo());
+  
+  self.port.on("play", () => player ? player.play() : null);
+  self.port.on("pause", () => player ? player.pause() : null);
+  self.port.on("stop", () => player ? player.stop() : null);
+  self.port.on("volume", (v) => player ? player.setVolume(v) : null);
+  //self.port.on("skip", () => player ? player.nextVideo() : null);
+  self.port.on("skip", function () {
+    var div = document.querySelector(".playlist-behavior-controls");
+    if (!div) return;
+    var next = div.querySelector('.next-playlist-list-item');
+    if (next) next.click();
+  });
+}

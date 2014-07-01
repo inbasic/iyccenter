@@ -157,11 +157,12 @@ mp.port.on("pause-all", pauseAll);
 mp.port.on("stop-all", function () {
   workers.get().forEach((w) => w.port.emit("stop"));
 });
-function play (id) {
-  var worker = workers.get().reduce((p, c) => p || (c && c.id === id ? c : null), null) || workers.get()[0];
+function play (id) {  //id === -1 to play an open tab
+  var worker = workers.get().reduce((p, c) => p || (c && c.id === id ? c : null), null);
+  if (id === -1) worker = workers.get().filter(w => w.id !== -1).shift();
   if (worker) return worker.port.emit("play");
   for each (var tab in tabs) {
-    if(/youtube\.com\/watch\?v\=/.test(tab.url) && id) {
+    if(/youtube\.com\/watch\?v\=/.test(tab.url) && id && id !== -1) {
       tab.options = {autoplay: true};
       return tab.attach({
         contentScript: 'window.location.replace("watch?v=' + id + '&autoplay=1");'
@@ -169,7 +170,7 @@ function play (id) {
     }
   }
   tabs.open({
-    url: id ? c.play.url + id + "&autoplay=1": c.play.def,
+    url: id && id !== -1 ? c.play.url + id + "&autoplay=1": c.play.def,
   });
 }
 mp.port.on("play", play);
@@ -210,7 +211,7 @@ button = toolbarbutton.ToolbarButton({
     switch (prefs.middle) {
       case 1:  return mp.show(tbb);
       case 2:  return pauseAll();
-      case 3:  return play();
+      case 3:  return play(-1);
       case 4:  return skip();
     }
   },
@@ -222,7 +223,7 @@ button = toolbarbutton.ToolbarButton({
     switch (prefs.context) {
       case 1:  return mp.show(tbb);
       case 2:  return pauseAll();
-      case 3:  return play();
+      case 3:  return play(-1);
       case 4:  return skip();
     }
   }
