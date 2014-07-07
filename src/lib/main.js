@@ -281,7 +281,12 @@ exports.main = function(options, callbacks) {
   }
 }
 exports.onUnload = function (reason) {
-  storage.release();
+  if (prefs.killOnExit) {
+    storage.killall().then(storage.release);
+  }
+  else {
+    storage.release();
+  }
 }
 
 /** Options **/
