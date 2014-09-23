@@ -75,9 +75,16 @@ if (window.top === window) {
       player.addEventListener("onStateChange", "iycenterListener");
       //Show more details
       if (self.options.prefs.moreDetails) {
-        var evObj = document.createEvent('MouseEvents');
-        evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null );
-        if ($("watch-description-toggle")) $("watch-description-toggle").dispatchEvent(evObj);
+        var button = document.querySelector("#action-panel-details button");
+        if (button) {
+          window.setTimeout(function () {
+            var evObj = document.createEvent('MouseEvents');
+            evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null);
+            button.dispatchEvent(evObj);
+            console.error(evObj);
+          }, 1000);
+        }
+        console.error(6, button)
       }
     });
   });

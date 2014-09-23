@@ -21,7 +21,7 @@ exports.configs = {
     }
   },
   extension: {
-    url: "http:/add0n.com/control-center.html",
+    url: "http://firefox.add0n.com/control-center.html",
     time: 3000
   }
 }
