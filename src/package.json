@@ -5,7 +5,7 @@
   "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
   "author": "InBasic",
   "license": "MPL 2.0",
-  "version": "0.3.2b2",
+  "version": "0.3.2b3",
   
   "permissions": {
     "unsafe-content-script": true,

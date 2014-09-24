@@ -82,7 +82,7 @@ if (window.top === window) {
             evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null);
             button.dispatchEvent(evObj);
             console.error(evObj);
-          }, 1000);
+          }, 2000);
         }
         console.error(6, button)
       }
