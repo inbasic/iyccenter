@@ -1,21 +1,25 @@
+/* globals XPCNativeWrapper, exportFunction, unsafeWindow, self */
+'use strict';
+
 function $(id) {
   $.cache = $.cache || [];
   $.cache[id] = $.cache[id] || window.content.document.getElementById(id);
   return $.cache[id];
 }
-
-var player;
-var id = () => (/[?&]v=([^&]+)/.exec(player.getVideoUrl()) || [null,null])[1];
-var location = () => window.content.document ? window.content.document.location.href : "";
+var player = () => XPCNativeWrapper.unwrap ($('movie_player') || $('movie_player-flash') || {});
+var id = (p) => (/[?&]v=([^&]+)/.exec(p.getVideoUrl()) || [null, null])[1];
+var location = () => window.content.document ? window.content.document.location.href : '';
 function title () {
-  if (!window.content.document) return "no title";
-  return [].reduce.call(window.content.document.getElementsByClassName("watch-title"), (p, c) => c.title, "no title");
+  if (!window.content.document) {
+    return 'no title';
+  }
+  return [].reduce.call(window.content.document.getElementsByClassName('watch-title'), (p, c) => c.title, 'no title');
 }
 
 function youtube (callback, pointer) {
   function Player (p) {
     // Accessing the JavaScript functions of the embedded player
-    p = XPCNativeWrapper.unwrap ($('movie_player') || $('movie_player-flash') || {});
+    p = player();
     var extend = {
       getAvailableQualityLevels: p.getAvailableQualityLevels,
       getDuration: () => p.getDuration(),
@@ -29,75 +33,103 @@ function youtube (callback, pointer) {
       pause: () => p.pauseVideo(),
       setVolume: (v) => p.setVolume(v),
       stop: function () {
-        if (p.seekTo) p.seekTo(0);
+        if (p.seekTo) {
+          p.seekTo(0);
+        }
         p.stopVideo();
         p.clearVideo();
       },
       quality: function (val) {
         var levels = p.getAvailableQualityLevels();
-        p.setPlaybackQuality(levels.indexOf(val) != -1 ? val : "default");
-      }
-    }
+        p.setPlaybackQuality(levels.indexOf(val) !== -1 ? val : 'default');
+      },
+      html: () => p
+    };
     return extend;
   }
-  
-  player = new Player();
-  if (player && player.getAvailableQualityLevels) {
-    callback.call(pointer);
+
+  var p = new Player();
+  if (p && p.getAvailableQualityLevels) {
+    callback.call(pointer, p);
   }
 }
-if (window.top === window) {
-  self.port.on("options", function(options) {
-    youtube(function () {
-      player.quality (
-        ["small", "medium", "large", "hd720", "hd1080", "highres", "default"][+self.options.prefs.quality]
-      );
-      player.setVolume(+self.options.prefs.volume);
-      if (!self.options.prefs.autoplay && self.options.prefs.fnautoplay) { // HTML 5 player only
-        player.stop();
-      }
-      if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
-        player.play();
-        player.pause();
-      } 
-      if (location().contains("autoplay=1")) {
-        player.play();
-      }
-      self.port.emit("info", {
-        duration: player.getDuration(),
-        title: player.getTitle(),
-        id: id()
-      });
-      //This function is called by YouTube player to report changes in the playing state
-      unsafeWindow.iycenterListener = function (e) {
-        self.port.emit("onStateChange", id(), e);
-      }
-      player.addEventListener("onStateChange", "iycenterListener");
-      //Show more details
-      if (self.options.prefs.moreDetails) {
-        var button = document.querySelector("#action-panel-details button");
-        if (button) {
-          window.setTimeout(function () {
-            var evObj = document.createEvent('MouseEvents');
-            evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null);
-            button.dispatchEvent(evObj);
-            console.error(evObj);
-          }, 2000);
+
+function init (type) {
+  var doOnce;
+  youtube(function (p) {
+    function iyccListenerChange (e) {
+      self.port.emit('onStateChange', id(p), e);
+      if (e === 1 || e === 3) {
+        if (!doOnce) {
+          // should I stop video from buffering?
+          var isHTML5 = !!p.html().querySelector('video');
+          if (!self.options.prefs.autoplay && !self.options.prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
+            doOnce = true;
+            p.stop();
+          }
+          // change video quality
+          p.quality (
+            ['small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'][+self.options.prefs.quality]
+          );
+          // change volume of the player
+          p.setVolume(+self.options.prefs.volume);
+          //
+          if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
+            p.play();
+            p.pause();
+          }
+          //
+          if (location().contains('autoplay=1')) {
+            p.play();
+          }
+          self.port.emit('info', {
+            duration: p.getDuration(),
+            title: p.getTitle(),
+            id: id()
+          });
         }
-        console.error(6, button)
       }
+    }
+    exportFunction(iyccListenerChange, unsafeWindow, {
+      defineAs: 'iyccListenerChange'
     });
+    function one () {
+      var p = player();
+      if (p && p.addEventListener && p.getPlayerState) {
+        p.addEventListener('onStateChange', 'iyccListenerChange');
+        iyccListenerChange(1);
+      }
+      else {
+        window.setTimeout(one, 1000);
+      }
+    }
+    one();
   });
-  
-  self.port.on("play", () => player ? player.play() : null);
-  self.port.on("pause", () => player ? player.pause() : null);
-  self.port.on("stop", () => player ? player.stop() : null);
-  self.port.on("volume", (v) => player ? player.setVolume(v) : null);
-  //self.port.on("skip", () => player ? player.nextVideo() : null);
-  self.port.on("skip", function () {
-    var div = document.querySelector(".playlist-behavior-controls");
-    if (!div) return;
-    var next = div.querySelector('.next-playlist-list-item');
-    if (next) next.click();
-  });
+  //Show more details
+  if (self.options.prefs.moreDetails) {
+    var button = document.querySelector('#action-panel-details button');
+    if (button) {
+      window.setTimeout(function () {
+        var evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent('click', true, true, unsafeWindow, null, null, null, null, null, false, false, true, false, 0, null);
+        button.dispatchEvent(evObj);
+      }, 2000);
+    }
+  }
 }
+window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
+
+self.port.on('play', () => player() ? player().play() : null);
+self.port.on('pause', () => player() ? player().pause() : null);
+self.port.on('stop', () => player() ? player().stop() : null);
+self.port.on('volume', (v) => player() ? player().setVolume(v) : null);
+self.port.on('skip', function () {
+  var div = document.querySelector('.playlist-behavior-controls');
+  if (!div) {
+    return;
+  }
+  var next = div.querySelector('.next-playlist-list-item');
+  if (next) {
+    next.click();
+  }
+});

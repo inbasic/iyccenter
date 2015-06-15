@@ -5,13 +5,13 @@
   "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
   "author": "InBasic",
   "license": "MPL 2.0",
-  "version": "0.3.2b3",
-  
+  "version": "0.3.2",
+
   "permissions": {
     "unsafe-content-script": true,
     "private-browsing": true
   },
-    
+
   "preferences": [
   {
     "name": "context",
@@ -122,13 +122,6 @@
   {
     "name": "autoplay",
     "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "fnautoplay",
-    "title": "",
-    "description": "",
     "type": "bool",
     "value": false
   },

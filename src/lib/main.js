@@ -13,7 +13,7 @@ var tabs             = require("sdk/tabs"),
     http             = require("./http"),
     userstyles       = require("./userstyles"),
     storage          = require('./storage'),
-    c                = require("./config.js").configs,
+    c                = require("./config").configs,
     windows          = {
       get active () { // Chrome window
         return require('sdk/window/utils').getMostRecentBrowserWindow();
@@ -94,7 +94,8 @@ pageMod.PageMod({
   include: ["*.youtube.com"],
   contentScriptFile: data.url("end.js"),
   contentScriptOptions: {prefs: prefs},
-  contentScriptWhen: "end",
+  contentScriptWhen: "start",
+  attachTo: ["existing", "top"],
   onAttach: function(worker) {
     workers.attach(worker);
     worker.on("detach", () => workers.detach(worker));
@@ -264,17 +265,18 @@ function search (q, num) {
 }
 /** Load and Unload **/
 exports.main = function(options, callbacks) {
-  timer.setTimeout(function () {
-    for each (var tab in tabs) {
-      if(/youtube\.com\/watch\?v\=/.test(tab.url)) tab.reload();
-    }
-  }, 1000);
   if (options.loadReason == "install" || prefs.forceVisible) {
     button.moveTo(c.toolbar.move);
   }
   //Welcome
   if (options.loadReason == "upgrade" || options.loadReason == "install") {
     prefs.newVer = options.loadReason;
+
+    timer.setTimeout(function () {
+      for each (var tab in tabs) {
+        if(/youtube\.com\/watch\?v\=/.test(tab.url)) tab.reload();
+      }
+    }, 1000);
   }
   if (options.loadReason == "startup" || options.loadReason == "install") {
     welcome();
@@ -300,7 +302,7 @@ function welcome () {
   if (!prefs.newVer) return;
   timer.setTimeout(function () {
     tabs.open({
-      url:  c.extension.url + "?v=" + self.version + "&type=" + prefs.newVer, 
+      url:  c.extension.url + "?v=" + self.version + "&type=" + prefs.newVer,
       inBackground : false
     });
     prefs.newVer = "";
@@ -320,10 +322,10 @@ var notify = (function () {
           notificationBox = browser.getNotificationBox();
 
       notification = notificationBox.appendNotification(
-        msg, 
+        msg,
         'jetpack-notification-box',
-        data.url("notification.png"), 
-        notificationBox.PRIORITY_INFO_MEDIUM, 
+        data.url("notification.png"),
+        notificationBox.PRIORITY_INFO_MEDIUM,
         []
       );
       timer.setTimeout(function() {
