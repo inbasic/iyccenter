@@ -7,7 +7,9 @@ function $(id) {
   return $.cache[id];
 }
 var player = () => XPCNativeWrapper.unwrap ($('movie_player') || $('movie_player-flash') || {});
-var id = (p) => (/[?&]v=([^&]+)/.exec(p.getVideoUrl()) || [null, null])[1];
+function id (p) {
+  return (/[?&]v=([^&]+)/.exec(p.getVideoUrl()) || [null, null])[1];
+}
 var location = () => window.content.document ? window.content.document.location.href : '';
 function title () {
   if (!window.content.document) {
@@ -85,7 +87,7 @@ function init (type) {
           self.port.emit('info', {
             duration: p.getDuration(),
             title: p.getTitle(),
-            id: id()
+            id: id(p)
           });
         }
       }
@@ -104,6 +106,20 @@ function init (type) {
       }
     }
     one();
+    self.port.on('play', () => p.play());
+    self.port.on('pause', () => p.pause());
+    self.port.on('stop', () => p.stop());
+    self.port.on('volume', (v) => p.setVolume(v));
+    self.port.on('skip', function () {
+      var div = document.querySelector('.playlist-behavior-controls');
+      if (!div) {
+        return;
+      }
+      var next = div.querySelector('.next-playlist-list-item');
+      if (next) {
+        next.click();
+      }
+    });
   });
   //Show more details
   if (self.options.prefs.moreDetails) {
@@ -118,18 +134,3 @@ function init (type) {
   }
 }
 window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
-
-self.port.on('play', () => player() ? player().play() : null);
-self.port.on('pause', () => player() ? player().pause() : null);
-self.port.on('stop', () => player() ? player().stop() : null);
-self.port.on('volume', (v) => player() ? player().setVolume(v) : null);
-self.port.on('skip', function () {
-  var div = document.querySelector('.playlist-behavior-controls');
-  if (!div) {
-    return;
-  }
-  var next = div.querySelector('.next-playlist-list-item');
-  if (next) {
-    next.click();
-  }
-});
