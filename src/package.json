@@ -42,6 +42,12 @@
     ]
   },
   {
+    "name": "header",
+    "title": "",
+    "type": "bool",
+    "value": true
+  },
+  {
     "name": "sidebar",
     "title": "",
     "type": "bool",

@@ -25,3 +25,9 @@ if (!self.options.prefs.views && !self.options.prefs.actions && $('watch8-action
 if (!self.options.prefs.details && $('action-panel-details')) {
   $('action-panel-details').style.display = 'none';
 }
+if (!self.options.prefs.header && $('masthead-positioner')) {
+  $('masthead-positioner').style.display = 'none';
+}
+if (!self.options.prefs.header && $('masthead-positioner-height-offset')) {
+  $('masthead-positioner-height-offset').style.display = 'none';
+}
