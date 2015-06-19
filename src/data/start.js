@@ -31,3 +31,11 @@ if (!self.options.prefs.header && $('masthead-positioner')) {
 if (!self.options.prefs.header && $('masthead-positioner-height-offset')) {
   $('masthead-positioner-height-offset').style.display = 'none';
 }
+if ($('autoplay-checkbox')) {
+  if ($('autoplay-checkbox').checked && !self.options.prefs.playlist) {
+    $('autoplay-checkbox').click();
+  }
+  if (!$('autoplay-checkbox').checked && self.options.prefs.playlist) {
+    $('autoplay-checkbox').click();
+  }
+}

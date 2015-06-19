@@ -138,6 +138,12 @@
     "value": false
   },
   {
+    "name": "playlist",
+    "title": "",
+    "type": "bool",
+    "value": false
+  },
+  {
     "name": "controls",
     "title": "",
     "type": "bool",

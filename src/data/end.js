@@ -11,9 +11,12 @@ function id (p) {
   return (/[?&]v=([^&]+)/.exec(p.getVideoUrl()) || [null, null])[1];
 }
 var location = () => window.content.document ? window.content.document.location.href : '';
-function title () {
+function title (p) {
   if (!window.content.document) {
     return 'no title';
+  }
+  if (p.getVideoData && p.getVideoData() && p.getVideoData().title) {
+    return p.getVideoData().title;
   }
   return [].reduce.call(window.content.document.getElementsByClassName('watch-title'), (p, c) => c.title, 'no title');
 }
@@ -25,8 +28,9 @@ function youtube (callback, pointer) {
     var extend = {
       getAvailableQualityLevels: p.getAvailableQualityLevels,
       getDuration: () => p.getDuration(),
+      getVideoData: () => p.a.getVideoData(),
       nextVideo: () => p.nextVideo(),
-      getTitle: () => title(),
+      getTitle: () => title(p),
       getVideoUrl: () => p.getVideoUrl(),
       loadVideoById: (id) => p.loadVideoById(id),
       loadVideoByUrl: (url) => p.loadVideoByUrl(url),
@@ -60,14 +64,22 @@ function init (type) {
   var doOnce;
   youtube(function (p) {
     function iyccListenerChange (e) {
-      self.port.emit('onStateChange', id(p), e);
-      if (e === 1 || e === 3) {
-        if (!doOnce) {
+      if (e === 1 || e === 3 || e === 5) {
+        if (doOnce !== id(p)) {
+          self.port.emit('info', {
+            duration: p.getDuration(),
+            title: p.getTitle(),
+            id: id(p)
+          });
           // should I stop video from buffering?
           var isHTML5 = !!p.html().querySelector('video');
           if (!self.options.prefs.autoplay && !self.options.prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
-            doOnce = true;
+            doOnce = id(p);
             p.stop();
+            type = '';
+            window.setTimeout(function () { // YouTube is not updating state
+              self.port.emit('onStateChange', id(p), -1);
+            }, 500);
           }
           // change video quality
           p.quality (
@@ -84,13 +96,9 @@ function init (type) {
           if (location().contains('autoplay=1')) {
             p.play();
           }
-          self.port.emit('info', {
-            duration: p.getDuration(),
-            title: p.getTitle(),
-            id: id(p)
-          });
         }
       }
+      self.port.emit('onStateChange', id(p), e);
     }
     exportFunction(iyccListenerChange, unsafeWindow, {
       defineAs: 'iyccListenerChange'
