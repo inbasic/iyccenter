@@ -272,11 +272,11 @@ exports.main = function(options, callbacks) {
   if (options.loadReason == "upgrade" || options.loadReason == "install") {
     prefs.newVer = options.loadReason;
 
-    timer.setTimeout(function () {
+/*    timer.setTimeout(function () {
       for each (var tab in tabs) {
         if(/youtube\.com\/watch\?v\=/.test(tab.url)) tab.reload();
       }
-    }, 1000);
+    }, 1000);*/
   }
   if (options.loadReason == "startup" || options.loadReason == "install") {
     welcome();

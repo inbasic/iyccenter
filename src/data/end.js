@@ -64,38 +64,36 @@ function init (type) {
   var doOnce;
   youtube(function (p) {
     function iyccListenerChange (e) {
-      if (e === 1 || e === 3 || e === 5) {
-        if (doOnce !== id(p)) {
-          self.port.emit('info', {
-            duration: p.getDuration(),
-            title: p.getTitle(),
-            id: id(p)
-          });
-          // should I stop video from buffering?
-          var isHTML5 = !!p.html().querySelector('video');
-          if (!self.options.prefs.autoplay && !self.options.prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
-            doOnce = id(p);
-            p.stop();
-            type = '';
-            window.setTimeout(function () { // YouTube is not updating state
-              self.port.emit('onStateChange', id(p), -1);
-            }, 500);
-          }
-          // change video quality
-          p.quality (
-            ['small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'][+self.options.prefs.quality]
-          );
-          // change volume of the player
-          p.setVolume(+self.options.prefs.volume);
-          //
-          if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
-            p.play();
-            p.pause();
-          }
-          //
-          if (location().contains('autoplay=1')) {
-            p.play();
-          }
+      if ((e === 1 || e === 3 || e === 5) && doOnce !== id(p)) {
+        doOnce = id(p);
+        self.port.emit('info', {
+          duration: p.getDuration(),
+          title: p.getTitle(),
+          id: id(p)
+        });
+        // should I stop video from buffering?
+        var isHTML5 = !!p.html().querySelector('video');
+        if (!self.options.prefs.autoplay && !self.options.prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
+          p.stop();
+          type = '';
+          window.setTimeout(function () { // YouTube is not updating state
+            self.port.emit('onStateChange', id(p), -1);
+          }, 500);
+        }
+        // change video quality
+        p.quality (
+          ['small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'][+self.options.prefs.quality]
+        );
+        // change volume of the player
+        p.setVolume(+self.options.prefs.volume);
+        //
+        if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
+          p.play();
+          p.pause();
+        }
+        //
+        if (location().contains('autoplay=1')) {
+          p.play();
         }
       }
       self.port.emit('onStateChange', id(p), e);
@@ -142,3 +140,6 @@ function init (type) {
   }
 }
 window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
+if (document.readyState !== 'loading') {
+  init('DOMContentLoaded');
+}
