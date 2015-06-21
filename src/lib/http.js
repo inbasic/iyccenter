@@ -20,7 +20,7 @@ TracingListener.prototype = {
     binaryInputStream.setInputStream(inputStream);
     var data = binaryInputStream.readBytes(count);
 
-    if (prefs.autohide) {
+    if (prefs.autohide || prefs.autofshow) {
       data = data.replace(/\"autohide\"\:\s*\d\,*/, '');
     }
     if (!prefs.autoplay) {
@@ -51,6 +51,9 @@ TracingListener.prototype = {
         var c = b;
         if (prefs.autohide) {
           c = '"autohide":"1",' + c;
+        }
+        if (prefs.autofshow) {
+          c = '"autohide":"0",' + c;
         }
         if (!prefs.autoplay) {
           c = '"autoplay":"0",' + c;

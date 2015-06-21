@@ -296,6 +296,17 @@ sp.on("clearLog", function () {
   if (!windows.active.confirm(_("msg2"))) return;
   storage.killall().then( () => notify(_("msg3")));
 });
+sp.on("autofshow", function () {
+  if (prefs.autofshow) {
+    prefs.autohide = false;
+    prefs.controls = true;
+  }
+});
+sp.on("autohide", function () {
+  if (prefs.autohide) {
+    prefs.autofshow = false;
+  }
+});
 
 /** Welcome page **/
 function welcome () {
