@@ -161,14 +161,14 @@ exports.ToolbarButton = function ToolbarButton(options) {
 
         tb.insertItem(options.id, b4, null, false);
       }
-      
+
       var saveTBNodeInfo = function(e) {
         toolbarID = tbb.parentNode.getAttribute("id") || "";
         insertbefore = (tbb.nextSibling || "")
             && tbb.nextSibling.getAttribute("id").replace(/^wrapper-/i, "");
 
         prefs.nextSibling = insertbefore;
-        prefs.toolbarID = toolbarID;  
+        prefs.toolbarID = toolbarID;
       };
 
       window.addEventListener("aftercustomization", saveTBNodeInfo, false);
@@ -226,7 +226,7 @@ exports.ToolbarButton = function ToolbarButton(options) {
         toolbarID = "nav-bar";
         insertbefore = "home-button";
       }
-      
+
       // change the current position for open windows
       for each (var window in utils.windows()) {
         if (browserURL != window.location) return;
@@ -242,7 +242,7 @@ exports.ToolbarButton = function ToolbarButton(options) {
 
         if (tb) {
           tb.insertItem(options.id, b4, null, false);
-          tb.setAttribute("currentset", tb.currentSet); 
+          tb.setAttribute("currentset", tb.currentSet);
           doc.persist(tb.id, "currentset");
         }
       };
@@ -257,7 +257,7 @@ exports.ToolbarButton = function ToolbarButton(options) {
     },
     set state (value) {
       setState({value: value});
-    }
+    },
     get tooltiptext() options.tooltiptext,
     set tooltiptext(value) {
       options.tooltiptext = value;
