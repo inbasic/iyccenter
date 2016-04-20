@@ -1,6 +1,9 @@
 /* globals XPCNativeWrapper, exportFunction, unsafeWindow, self */
 'use strict';
 
+var installed;
+var prefs;
+
 function $(id) {
   $.cache = $.cache || [];
   $.cache[id] = $.cache[id] || window.content.document.getElementById(id);
@@ -10,7 +13,7 @@ var player = () => XPCNativeWrapper.unwrap ($('movie_player') || $('movie_player
 function id (p) {
   return (/[?&]v=([^&]+)/.exec(p.getVideoUrl()) || [null, null])[1];
 }
-var location = () => window.content.document ? window.content.document.location.href : '';
+var location = () => window.content.document ? window.content.document.location.href : ''; // jshint ignore:line
 function title (p) {
   if (!window.content.document) {
     return 'no title';
@@ -73,7 +76,7 @@ function init (type) {
         });
         // should I stop video from buffering?
         var isHTML5 = !!p.html().querySelector('video');
-        if (!self.options.prefs.autoplay && !self.options.prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
+        if (!prefs.autoplay && !prefs.autobuffer && isHTML5 && type === 'DOMContentLoaded') { // HTML 5 player only
           p.stop();
           type = '';
           window.setTimeout(function () { // YouTube is not updating state
@@ -82,12 +85,12 @@ function init (type) {
         }
         // change video quality
         p.quality (
-          ['small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'][+self.options.prefs.quality]
+          ['small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'][+prefs.quality]
         );
         // change volume of the player
-        p.setVolume(+self.options.prefs.volume);
+        p.setVolume(+prefs.volume);
         //
-        if (self.options.prefs.autobuffer && !self.options.prefs.autoplay) {
+        if (prefs.autobuffer && !prefs.autoplay) {
           p.play();
           p.pause();
         }
@@ -106,6 +109,7 @@ function init (type) {
       if (p && p.addEventListener && p.getPlayerState) {
         p.addEventListener('onStateChange', 'iyccListenerChange');
         iyccListenerChange(1);
+        installed = true;
       }
       else {
         window.setTimeout(one, 1000);
@@ -128,7 +132,7 @@ function init (type) {
     });
   });
   //Show more details
-  if (self.options.prefs.moreDetails) {
+  if (prefs.moreDetails) {
     var button = document.querySelector('#action-panel-details button');
     if (button) {
       window.setTimeout(function () {
@@ -139,7 +143,35 @@ function init (type) {
     }
   }
 }
-window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
-if (document.readyState !== 'loading') {
-  init('DOMContentLoaded');
+
+var observer;
+function install () {
+  if (observer) {
+    return;
+  }
+  observer = new window.MutationObserver(function () {
+    if (!installed) {
+      init('DOMContentLoaded');
+    }
+    else {
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 }
+
+self.port.on('prefs', function (p) {
+  prefs = p;
+  window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
+  if (document.readyState !== 'loading') {
+    init('DOMContentLoaded');
+  }
+  window.addEventListener('DOMContentLoaded', install, false);
+  if (document.readyState !== 'loading') {
+    install();
+  }
+});
+

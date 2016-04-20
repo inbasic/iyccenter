@@ -2,8 +2,11 @@
 'use strict';
 
 var events       = require('sdk/system/events'),
+    unload       = require('sdk/system/unload'),
     prefs        = require('sdk/simple-prefs').prefs,
     {Cc, Ci, Cr} = require('chrome');
+
+var nsIObserverService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
 
 function TracingListener() {
   this.originalListener = null;
@@ -70,13 +73,12 @@ TracingListener.prototype = {
         if (!prefs.rel) {
           c = '"rel":"0",' + c;
         }
-        if (prefs.theme === '1') {
+        if (prefs.theme === 1) {
           c = '"theme":"light",' + c;
         }
-        if (prefs.color === '1') {
+        if (prefs.color === 1) {
           c = '"color":"white",' + c;
         }
-
         return a.replace(b, c);
       });
     }
@@ -104,18 +106,49 @@ TracingListener.prototype = {
   }
 };
 
-function onExamineResponse ({data, subject, type}) {
-  if (type !== 'http-on-examine-response') {
-    return;
-  }
-  subject.QueryInterface(Ci.nsIHttpChannel);
-  var url = subject.URI.spec;
-  if (!url.contains('youtube.com/watch?v=')) {
-    return;
-  }
+(function () {
+  let httpRequestObserver = {
+    observe: function (subject, topic) {
+      if (topic === 'http-on-examine-response') {
+        try {
+          subject.QueryInterface(Ci.nsIHttpChannel);
+          let url = subject.URI.spec;
 
-  var newListener = new TracingListener();
-  subject.QueryInterface(Ci.nsITraceableChannel);
-  newListener.originalListener = subject.setNewListener(newListener);
-}
-events.on("http-on-examine-response", onExamineResponse);
+          if (!url.contains('youtube.com/watch?v=')) {
+            return;
+          }
+
+          let newListener = new TracingListener();
+          subject.QueryInterface(Ci.nsITraceableChannel);
+          newListener.originalListener = subject.setNewListener(newListener);
+        }
+        catch (e) {}
+      }
+    }
+  };
+  nsIObserverService.addObserver(httpRequestObserver, 'http-on-examine-response', false);
+  unload.when(function () {
+    nsIObserverService.removeObserver(httpRequestObserver, 'http-on-examine-response');
+  });
+})();
+
+(function () {
+  let httpRequestObserver = {
+    observe: function (subject, topic) {
+      if (topic === 'http-on-modify-request') {
+        if (prefs.playlist) {
+          return;
+        }
+        subject.QueryInterface(Ci.nsIHttpChannel);
+        let url = subject.URI.spec;
+        if (url.indexOf('watch_autoplayrenderer.js') !== -1 && url.indexOf('ytimg.com/yts') !== -1) {
+          subject.cancel(Cr.NS_BINDING_ABORTED);
+        }
+      }
+    }
+  };
+  nsIObserverService.addObserver(httpRequestObserver, 'http-on-modify-request', false);
+  unload.when(function () {
+    nsIObserverService.removeObserver(httpRequestObserver, 'http-on-modify-request');
+  });
+})();

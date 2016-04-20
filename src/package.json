@@ -1,12 +1,12 @@
 {
   "name": "iyccenter",
   "title": "YouTube Control Center",
-  "id": "jid1-CikLKKPVkw6ipw",
+  "id": "jid1-CikLKKPVkw6ipw@jetpack",
   "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
   "author": "InBasic",
   "license": "MPL 2.0",
-  "version": "0.3.5b1",
-
+  "version": "0.3.5",
+  "main": "./lib/main.js",
   "permissions": {
     "unsafe-content-script": true,
     "private-browsing": true
@@ -15,8 +15,7 @@
   "preferences": [
   {
     "name": "context",
-    "title": "",
-    "description": "",
+    "title": "[UI] Right click on the toolbar button",
     "type": "menulist",
     "value": 0,
     "options": [
@@ -29,8 +28,7 @@
   },
   {
     "name": "middle",
-    "title": "",
-    "description": "",
+    "title": "[UI] Middle click on the toolbar button:",
     "type": "menulist",
     "value": 0,
     "options": [
@@ -43,56 +41,55 @@
   },
   {
     "name": "header",
-    "title": "",
+    "title": "[Player] Suggested playback quality:",
     "type": "bool",
     "value": true
   },
   {
     "name": "sidebar",
-    "title": "",
+    "title": "[Page] Display 'video suggestions' sidebar:",
     "type": "bool",
     "value": true
   },
   {
     "name": "discussion",
-    "title": "",
+    "title": "[Page] Display 'video comments' pane:",
     "type": "bool",
     "value": true
   },
   {
     "name": "views",
-    "title": "",
+    "title": "[Page] Display 'video views info' pane:",
     "type": "bool",
     "value": true
   },
   {
     "name": "actions",
-    "title": "",
+    "title": "[Page] Display 'action buttons' pane ('like', 'dislike', 'share', ... buttons)",
     "type": "bool",
     "value": true
   },
   {
     "name": "details",
-    "title": "",
+    "title": "[Page] Display 'details' pane (published info, buy video, ...):",
     "type": "bool",
     "value": true
   },
   {
     "name": "moreDetails",
-    "title": "",
+    "title": "[Page] Automatically 'Show more' on the video description:",
     "type": "bool",
     "value": false
   },
   {
     "name": "annotations",
-    "title": "",
+    "title": "Player] Show video annotations on player:",
     "type": "bool",
     "value": true
   },
   {
     "name": "quality",
-    "title": "",
-    "description": "",
+    "title": "[Player] Suggested playback quality:",
     "type": "menulist",
     "value": 6,
     "options": [
@@ -107,8 +104,7 @@
   },
   {
     "name": "volume",
-    "title": "",
-    "description": "",
+    "title": "[Player] Deaflut video playback volume:",
     "type": "menulist",
     "value": 80,
     "options": [
@@ -127,74 +123,76 @@
   },
   {
     "name": "autoplay",
-    "title": "",
+    "title": "[Player] Autoplay video when player loads ((tab refreshing is required):",
+    "description": "False value conflicts with 'automatically play next video from playlist'",
     "type": "bool",
-    "value": false
+    "value": true
   },
   {
     "name": "autobuffer",
-    "title": "",
+    "title": "[Player] Autobuffer video even if player is not playing:",
     "type": "bool",
     "value": false
   },
   {
     "name": "playlist",
-    "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "controls",
-    "title": "",
-    "type": "bool",
-    "value": true
-  },
-  {
-    "name": "autohide",
-    "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "autofshow",
-    "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "loop",
-    "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "loopDelay",
-    "title": "",
-    "type": "integer",
-    "value": 2
-  },
-  {
-    "name": "disablekb",
-    "title": "",
-    "type": "bool",
-    "value": false
-  },
-  {
-    "name": "fs",
-    "title": "",
+    "title": "[Player] Automatically play next video from playlist:",
+    "description": "False value conflicts with 'autoplay video when player loads' and 'display related videos when playback of the video ends'",
     "type": "bool",
     "value": true
   },
   {
     "name": "rel",
-    "title": "",
+    "title": "[Player] Display related videos when playback of the current video ends:",
+    "description": "False value conflicts with 'automatically play next video from playlist'",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "controls",
+    "title": "[Player] Show video controls on player (deprecated):",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "name": "autohide",
+    "title": "[Player] Autohide video controls after a video begins playing:",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "autofshow",
+    "title": "[Player] Display video controls even in fullscreen mode:",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "loop",
+    "title": "[Player] Play videos again and again (loop mode) (tab refreshing is required):",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "loopDelay",
+    "title": "[Player] Delay between plays for loop mode (in seconds):",
+    "type": "integer",
+    "value": 2
+  },
+  {
+    "name": "disablekb",
+    "title": "[Player] Disable keyboard controls (spacebar and arrow keys) on player:",
+    "type": "bool",
+    "value": false
+  },
+  {
+    "name": "fs",
+    "title": "Display fullscreen button on player:",
     "type": "bool",
     "value": true
   },
   {
     "name": "theme",
-    "title": "",
-    "description": "",
+    "title": "[Player] Display player controls (like a 'play' button or volume control) within a dark or light control bar (deprecated):",
     "type": "menulist",
     "value": 0,
     "options": [
@@ -204,8 +202,7 @@
   },
   {
     "name": "color",
-    "title": "",
-    "description": "",
+    "title": "[Player] Color of video progressbar:",
     "type": "menulist",
     "value": 0,
     "options": [
@@ -215,32 +212,38 @@
   },
   {
     "name": "onePlayer",
-    "title": "",
+    "title": "[Misc.] Pause all YouTube players when the current player is playing:",
     "type": "bool",
     "value": true
   },
   {
     "name": "skipads",
-    "title": "",
+    "title": "[Misc.] Skip advertisements in player:",
     "type": "bool",
     "value": true
   },
   {
     "name": "forceVisible",
-    "title": "",
+    "title": "[Misc.] Always try to keep the toolbar button visible:",
     "type": "bool",
     "value": true
   },
   {
     "name": "killOnExit",
-    "title": "",
+    "title": "[Misc.] Clear tracks (logs) history on exit:",
     "type": "bool",
     "value": false
   },
   {
     "name": "clearLog",
     "type": "control",
-    "label": "",
-    "title": ""
+    "label": "Clear",
+    "title": "[Misc.] Clear tracks (logs) history:"
+  },
+  {
+    "name": "reset",
+    "type": "control",
+    "label": "Reset",
+    "title": "[Misc.] Reset all settings to the defaults"
   }]
 }

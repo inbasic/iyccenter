@@ -1,29 +1,29 @@
-var tabs             = require("sdk/tabs"),
-    self             = require("sdk/self"),
+var tabs             = require('sdk/tabs'),
+    self             = require('sdk/self'),
     data             = self.data,
     {Cc, Ci, Cu, Cr} = require('chrome'),
-    pageMod          = require("sdk/page-mod"),
-    Request          = require("sdk/request").Request,
-    _                = require("sdk/l10n").get,
-    timer            = require("sdk/timers"),
-    panel            = require("sdk/panel"),
-    tabs             = require("sdk/tabs"),
-    sp               = require("sdk/simple-prefs"),
+    pageMod          = require('sdk/page-mod'),
+    Request          = require('sdk/request').Request,
+    _                = require('sdk/l10n').get,
+    timer            = require('sdk/timers'),
+    panel            = require('sdk/panel'),
+    tabs             = require('sdk/tabs'),
+    sp               = require('sdk/simple-prefs'),
     prefs            = sp.prefs,
-    http             = require("./http"),
-    userstyles       = require("./userstyles"),
+    http             = require('./http'),
+    userstyles       = require('./userstyles'),
     storage          = require('./storage'),
-    c                = require("./config").configs,
+    c                = require('./config').configs,
     windows          = {
       get active () { // Chrome window
         return require('sdk/window/utils').getMostRecentBrowserWindow();
       }
     }
-    isAustralis   = "gCustomizeMode" in windows.active,
-    toolbarbutton = isAustralis ? require("toolbarbutton/new") : require("toolbarbutton/old");
+    isAustralis   = 'gCustomizeMode' in windows.active,
+    toolbarbutton = isAustralis ? require('./toolbarbutton/new') : require('./toolbarbutton/old');
 
 /** Libraries **/
-Cu.import("resource://gre/modules/Promise.jsm");
+Cu.import('resource://gre/modules/Promise.jsm');
 if (!Promise.all) { //Support for FF 24.0
   Promise = (function () {
     var obj = {};
@@ -49,7 +49,7 @@ if (!Promise.all) { //Support for FF 24.0
 }
 
 /** Loading styles **/
-userstyles.load(data.url("overlay.css"));
+userstyles.load(data.url('overlay.css'));
 
 /** Debugger **/
 function debug () {
@@ -85,19 +85,21 @@ var workers = (function () {
 })();
 pageMod.PageMod({
   include: ["*.youtube.com"],
-  contentScriptOptions: {prefs: prefs},
   contentScriptFile: data.url("start.js"),
-  contentScriptWhen: "ready"
+  contentScriptWhen: "ready",
+  onAttach: function(worker) {
+    worker.port.emit('prefs', prefs);
+  }
 });
 
 pageMod.PageMod({
   include: ["*.youtube.com"],
   contentScriptFile: data.url("end.js"),
-  contentScriptOptions: {prefs: prefs},
   contentScriptWhen: "start",
   attachTo: ["existing", "top"],
   onAttach: function(worker) {
     workers.attach(worker);
+    worker.port.emit('prefs', prefs);
     worker.on("detach", () => workers.detach(worker));
     worker.port.emit("options", worker.tab.options);
     worker.port.on("info", function(o) {
@@ -198,6 +200,29 @@ mp.port.on("settings", function () {
   windows.active.BrowserOpenAddonsMgr("addons://detail/" + self.id);
   mp.hide();
 });
+mp.port.on('prefs', function (obj) {
+  if (obj.value === null) {
+    mp.port.emit('prefs', {
+      name: obj.name,
+      value: prefs[obj.name]
+    });
+  }
+  else {
+    prefs[obj.name] = obj.value;
+  }
+});
+sp.on('autoplay', () => {
+  mp.port.emit('prefs', {
+    name: 'autoplay',
+    value: prefs.autoplay
+  });
+});
+sp.on('loop', () => {
+  mp.port.emit('prefs', {
+    name: 'loop',
+    value: prefs.loop
+  });
+});
 /** Toolbar Button **/
 button = toolbarbutton.ToolbarButton({
   id: c.toolbar.id,
@@ -238,19 +263,16 @@ function search (q, num) {
   if (q) {
     Request({
       url: c.search.url.replace("%q", q),
+      headers: {
+        Referer: 'https://www.youtube.com/'
+      },
       onComplete: function (r) {
-        try {
-          r.json.feed
-        }
-        catch (e) {
-          return d.reject(Error(_("err2")));
-        }
-        d.resolve((r.json.feed.entry || []).splice(0, num).map(function (i) {
-          var id = (/videos\/([^&\/]+)/.exec(i.id.$t) || [null,null])[1];
+        d.resolve((r.json && r.json.items ? r.json.items : []).splice(0, num).map(function (i) {
+          let id = i.id.videoId;
           return {
-            id: id,
-            duration: i.media$group.yt$duration.seconds,
-            title: i.title.$t,
+            id,
+            duration: 0,
+            title: i.snippet.title,
             state: workers.get().reduce((p, c) => c.id == id ? c.state : p, null),
             type: "internet"
           };
@@ -292,6 +314,14 @@ exports.onUnload = function (reason) {
 }
 
 /** Options **/
+sp.on('reset', function () {
+  let pservice = Cc["@mozilla.org/preferences-service;1"].
+    getService(Ci.nsIPrefService).
+    getBranch("extensions.jid1-CikLKKPVkw6ipw@jetpack.");
+  pservice.getChildList('',{})
+    .filter(n => n !== 'version' && n.indexOf('sdk') === -1)
+    .forEach(n => pservice.clearUserPref(n));
+});
 sp.on("clearLog", function () {
   if (!windows.active.confirm(_("msg2"))) return;
   storage.killall().then( () => notify(_("msg3")));
@@ -307,6 +337,17 @@ sp.on("autohide", function () {
     prefs.autofshow = false;
   }
 });
+sp.on("playlist", function () {
+  if (prefs.playlist) {
+    prefs.autoplay = true;
+    prefs.rel = true;
+  }
+});
+sp.on('rel', function () {
+  if (!prefs.rel) {
+    prefs.playlist = false;
+  }
+})
 
 /** Welcome page **/
 function welcome () {

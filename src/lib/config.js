@@ -1,6 +1,6 @@
 exports.configs = {
   search: {
-    url: "http://gdata.youtube.com/feeds/api/videos?q=%q&alt=json",
+    url: "https://www.googleapis.com/youtube/v3/search?part=snippet&q=%q&type=video&key=AIzaSyAlphXgkjG-MXvlYnnzQv6cneRUepZA0uw",
     sql: 4,
   },
   play: {
@@ -9,13 +9,13 @@ exports.configs = {
   },
   panel: {
     width: 400,
-    height: 300,
+    height: 370,
     numbers: 7
   },
   toolbar: {
     id: "iycenter",
     move: {
-      toolbarID: "nav-bar", 
+      toolbarID: "nav-bar",
       insertbefore: "home-button",
       forceMove: false
     }

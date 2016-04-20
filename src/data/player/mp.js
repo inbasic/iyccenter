@@ -12,11 +12,33 @@ $("history").addEventListener("click",function (e) {
   }
   else if (target.localName === "tr") {
     self.port.emit(
-      target.getAttribute("playing") == "1" ? "pause" : "play", 
+      target.getAttribute("playing") == "1" ? "pause" : "play",
       target.getAttribute("videoID")
     );
   }
 }, false);
+
+
+document.addEventListener("change", function (e) {
+  let target = e.target;
+  let pref = target.dataset.pref;
+  if (pref) {
+    self.port.emit('prefs', {
+      name: pref,
+      value: target.checked
+    });
+  }
+});
+self.port.on('prefs', function (obj) {
+  var elem = document.querySelector(`[data-pref="${obj.name}"]`);
+  if (elem) {
+    elem.checked = obj.value;
+  }
+});
+Array.from(document.querySelectorAll('[data-pref]')).forEach(e => self.port.emit({
+  name: e.dataset.pref,
+  value: null
+}));
 /*
 var move = (function () {
   var dragged;
@@ -39,7 +61,7 @@ var move = (function () {
       e.preventDefault();
       paint(dragged, "remove", "over-initiated");
       paint(e, "remove", "over");
-      
+
       var childs = $("history").getElementsByTagName("tr");
       var i = Array.prototype.indexOf.call(childs, dragged.originalTarget);
       var j = Array.prototype.indexOf.call(childs, e.originalTarget);

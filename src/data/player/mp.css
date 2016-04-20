@@ -14,6 +14,11 @@ body {
   height: calc(100% - 10px);
   cursor: default;
 }
+hr {
+  margin: 10px 0;
+  border: none;
+  border-top: dotted 1px rgba(48,184,237,0.7);;
+}
 /* Controls */
 #controls {
   display: -moz-box;
@@ -167,6 +172,7 @@ body {
   display: -moz-box;
   -moz-box-pack: end;
   -moz-box-align: center;
+  padding-top: 5px;
 }
 #search-div input {
   border: solid 1px rgba(48,184,237,0.7);
@@ -180,5 +186,8 @@ body {
   border: solid 1px rgba(48,184,237,1);
 }
 #search-div input[loading] {
-  background-image: url('load.gif')
+  background-image: url('load.gif');
+}
+#controls-div {
+
 }
