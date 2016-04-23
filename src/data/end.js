@@ -95,7 +95,7 @@ function init (type) {
           p.pause();
         }
         //
-        if (location().contains('autoplay=1')) {
+        if (location().indexOf('autoplay=1') !== -1) {
           p.play();
         }
       }
@@ -108,7 +108,7 @@ function init (type) {
       var p = player();
       if (p && p.addEventListener && p.getPlayerState) {
         p.addEventListener('onStateChange', 'iyccListenerChange');
-        iyccListenerChange(1);
+        iyccListenerChange(p.getPlayerState());
         installed = true;
       }
       else {
@@ -165,13 +165,12 @@ function install () {
 
 self.port.on('prefs', function (p) {
   prefs = p;
-  window.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
+  document.addEventListener('DOMContentLoaded', () => init('DOMContentLoaded'), false);
   if (document.readyState !== 'loading') {
     init('DOMContentLoaded');
   }
-  window.addEventListener('DOMContentLoaded', install, false);
+  document.addEventListener('DOMContentLoaded', install, false);
   if (document.readyState !== 'loading') {
     install();
   }
 });
-
