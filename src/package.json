@@ -5,11 +5,12 @@
   "description": "YouTube Control Center provides a set of useful tools for YouTube.com",
   "author": "InBasic",
   "license": "MPL 2.0",
-  "version": "0.3.6b1",
+  "version": "0.3.6",
   "main": "./lib/main.js",
   "permissions": {
     "unsafe-content-script": true,
-    "private-browsing": true
+    "private-browsing": true,
+    "multiprocess": true
   },
 
   "preferences": [

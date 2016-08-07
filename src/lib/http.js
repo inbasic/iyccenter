@@ -49,7 +49,7 @@ TracingListener.prototype = {
       data = data.replace(/\"ad3_module\"\:\s*[^\,]*\,*/, '');
     }
 
-    if (data.contains('"args":')) {
+    if (data.indexOf('"args":') !== -1) {
       data = data.replace(/\"args\"\:\s*\{([^\}]*)\}*/, function (a, b) {
         var c = b;
         if (prefs.autohide) {
@@ -114,7 +114,8 @@ TracingListener.prototype = {
           subject.QueryInterface(Ci.nsIHttpChannel);
           let url = subject.URI.spec;
 
-          if (!url.contains('youtube.com/watch?v=')) {
+
+          if (url.indexOf('youtube.com/watch?v=') === -1) {
             return;
           }
 

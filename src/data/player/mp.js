@@ -35,7 +35,7 @@ self.port.on('prefs', function (obj) {
     elem.checked = obj.value;
   }
 });
-Array.from(document.querySelectorAll('[data-pref]')).forEach(e => self.port.emit({
+Array.from(document.querySelectorAll('[data-pref]')).forEach(e => self.port.emit('prefs', {
   name: e.dataset.pref,
   value: null
 }));

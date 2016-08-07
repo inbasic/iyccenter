@@ -224,6 +224,7 @@ sp.on('loop', () => {
     value: prefs.loop
   });
 });
+
 /** Toolbar Button **/
 button = toolbarbutton.ToolbarButton({
   id: c.toolbar.id,
