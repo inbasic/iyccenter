@@ -251,6 +251,13 @@
     "title": "[Misc.] Clear tracks (logs) history:"
   },
   {
+    "name": "faqs",
+    "title": "[Misc.] Display FAQs page upon upgrade:",
+    "description": "Extension will display the FAQs page once per upgrade to notify you about the recent changes",
+    "type": "bool",
+    "value": true
+  },
+  {
     "name": "reset",
     "type": "control",
     "label": "Reset",

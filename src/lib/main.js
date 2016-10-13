@@ -303,12 +303,6 @@ exports.main = function(options) {
   //Welcome
   if (options.loadReason === 'upgrade' || options.loadReason === 'install') {
     prefs.newVer = options.loadReason;
-
-/*    timer.setTimeout(function () {
-      for each (var tab in tabs) {
-        if(/youtube\.com\/watch\?v\=/.test(tab.url)) tab.reload();
-      }
-    }, 1000);*/
   }
   if (options.loadReason === 'startup' || options.loadReason === 'install') {
     welcome();
@@ -367,10 +361,12 @@ function welcome () {
     return;
   }
   timer.setTimeout(function () {
-    tabs.open({
-      url:  c.extension.url + '?v=' + self.version + '&type=' + prefs.newVer,
-      inBackground : false
-    });
+    if (prefs.faqs) {
+      tabs.open({
+        url:  c.extension.url + '?v=' + self.version + '&type=' + prefs.newVer,
+        inBackground : false
+      });
+    }
     prefs.newVer = '';
   }, c.extension.time);
 }
