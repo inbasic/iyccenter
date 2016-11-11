@@ -59,8 +59,10 @@ function iyccListenerChange (e) {
 exportFunction(iyccListenerChange, unsafeWindow, {
   defineAs: 'iyccListenerChange'
 });
-
-function onYouTubePlayerReady (e) {
+// other extensions/greasemonkey scripts that listen over the global "onYouTubePlayerReady" function should
+// push their listener into the global yttools object. This way all the listeners are called without interfering
+unsafeWindow.yttools = unsafeWindow.yttools || [];
+unsafeWindow.yttools.push(function (e) {
   e = XPCNativeWrapper.unwrap(e);
   player = e;
   let pathname = document.location.pathname;
@@ -117,10 +119,16 @@ function onYouTubePlayerReady (e) {
       window.setTimeout(() => button.click(), 2000);
     }
   }
-}
-exportFunction(onYouTubePlayerReady, unsafeWindow, {
-  defineAs: 'onYouTubePlayerReady'
 });
+function onYouTubePlayerReady (e) {
+  (unsafeWindow.yttools || []).forEach(c => c(e));
+}
+try {
+  exportFunction(onYouTubePlayerReady, unsafeWindow, {
+    defineAs: 'onYouTubePlayerReady'
+  });
+}
+catch (e) {}
 
 // config.args
 self.port.on('prefs', (p) => {
