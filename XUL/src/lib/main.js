@@ -167,7 +167,7 @@ function play (id) {  //id === -1 to play an open tab
   if (worker) {
     return worker.port.emit('play');
   }
-  for each (var tab in tabs) {
+  for (let tab of tabs) {
     if(/youtube\.com\/watch\?v\=/.test(tab.url) && id && id !== -1) {
       tab.options = {autoplay: true};
       return tab.attach({

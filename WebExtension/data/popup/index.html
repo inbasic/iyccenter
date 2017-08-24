@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <div id="controls" hbox align=center pack=center>
+      <span id="backward" data-cmd="previous"></span>
+      <span id="play" data-cmd="play"></span>
+      <span id="forward" data-cmd="next"></span>
+      <span id="stop" data-cmd="stop"></span>
+    </div>
+    <table id="info" width=100%>
+      <tr>
+        <td>Title</td>
+        <td id="title">-</td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td>
+        <div id="progress">
+          <div></div>
+        </div>
+        </td>
+      </tr>
+    </table>
+    <details open id="player">
+      <summary>Player settings</summary>
+      <table width=100%>
+        <tr>
+          <td>Use wide screen (refresh tab)</td>
+          <td><input type="checkbox" name="wide"></td>
+        </tr>
+        <tr>
+          <td>Auto play video (refresh tab)</td>
+          <td><input type="checkbox" name="autoplay"></td>
+        </tr>
+        <tr>
+          <td>Show video annotations (refresh tab)</td>
+          <td><input type="checkbox" name="annotations"></td>
+        </tr>
+        <tr>
+          <td>Suggested playback quality</td>
+          <td>
+          <select id="quality">
+            <option value="default">Default</option>
+            <option value="highest">Highest Resolution</option>
+            <option value="hd2160p">HD2160p</option>
+            <option value="hd1440p">HD1440p</option>
+            <option value="hd1080p">HD1080p</option>
+            <option value="hd720p">HD720p</option>
+            <option value="large">Large</option>
+            <option value="medium">Medium</option>
+            <option value="small">Small</option>
+            <option value="tiny">Tiny</option>
+          </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Auto play next video</td>
+          <td><input type="checkbox" name="next"></td>
+        </tr>
+      </table>
+    </details>
+    <details open id="page">
+      <summary>Page settings</summary>
+      <table width=100%>
+        <tr>
+          <td>Display "search bar"</td>
+          <td><input type="checkbox" name="searchbar"></td>
+        </tr>
+        <tr>
+          <td>Display "video suggestions" sidebar</td>
+          <td><input type="checkbox" name="sidebar"></td>
+        </tr>
+        <tr>
+          <td>Display "video comments" pane</td>
+          <td><input type="checkbox" name="comments"></td>
+        </tr>
+        <tr>
+          <td>Display "video view info" pane</td>
+          <td><input type="checkbox" name="info"></td>
+        </tr>
+        <tr>
+          <td>Display "details" pane (published info, buy video, ...)</td>
+          <td><input type="checkbox" name="details"></td>
+        </tr>
+      </table>
+    </details>
+    <script src="index.js"></script>
+  </body>
+</html>
