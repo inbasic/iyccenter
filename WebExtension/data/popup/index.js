@@ -83,6 +83,7 @@ chrome.storage.local.get({
   wide: false,
   next: true,
   autoplay: true,
+  autobuffer: false,
   annotations: true,
   quality: 'default',
   // page

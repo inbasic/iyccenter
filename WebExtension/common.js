@@ -37,6 +37,13 @@ chrome.storage.onChanged.addListener(prefs => {
       value: String(prefs.autoplay.newValue)
     });
   }
+  if (prefs.autobuffer) {
+    chrome.cookies.set({
+      url: 'https://www.youtube.com',
+      name: 'autobuffer',
+      value: String(prefs.autobuffer.newValue)
+    });
+  }
   if (prefs.annotations) {
     chrome.cookies.set({
       url: 'https://www.youtube.com',

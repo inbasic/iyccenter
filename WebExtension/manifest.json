@@ -3,7 +3,7 @@
   "short_name": "iycc",
   "description": "YouTube popup pause and resume as well as no buffer, HD quality, wide screen, ...",
   "author": "InBasic",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "manifest_version": 2,
   "permissions": [
     "storage",
@@ -23,8 +23,8 @@
     ],
     "js": [
       "data/page.js",
-      "data/no_buffer.js",
       "data/controls.js",
+      "data/no_buffer.js",
       "data/quality.js",
       "data/next_track.js",
       "data/css.js"
@@ -44,12 +44,14 @@
       "32": "data/icons/32.png",
       "48": "data/icons/48.png",
       "64": "data/icons/64.png"
-    }
+    },
+    "default_title": "Yuotbue Control Center\n\n - Opens YouTube when no player is detected.\n - Displays the control popup when there is at least one YouTube player"
   },
   "homepage_url": "http://add0n.com/control-center.html",
   "applications": {
     "gecko": {
-      "id": "jid1-CikLKKPVkw6ipw@jetpack"
+      "id": "jid1-CikLKKPVkw6ipw@jetpack",
+      "strict_min_version": "54.0"
     }
   }
 }

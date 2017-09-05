@@ -8,7 +8,11 @@
   callback();
 }
 
-window.addEventListener('unload', () => chrome.runtime.sendMessage({
-  method: 'page-removed'
-}));
-window.addEventListener('yt-navigate-start', () => console.log(9912));
+window.addEventListener('unload', () => {
+  try {
+    chrome.runtime.sendMessage({
+      method: 'page-removed'
+    });
+  }
+  catch (e) {}
+});

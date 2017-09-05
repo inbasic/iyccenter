@@ -5,12 +5,23 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
   textContent: `{
     // stop the new layer from starting the video
     if (document.cookie.includes('autoplay=false')) {
-      document.addEventListener('yt-page-data-fetched', e => {
-        if (typeof iccplayer !== 'undefined') {
-          iccplayer.stopVideo();
-          e.stopPropagation();
-        }
-      });
+      if (typeof iccplayer !== 'undefined') {
+        // Method 0
+        iccplayer.stopVideo();
+        // Method 1; prevent polymer from starting video
+        const playVideo = iccplayer.playVideo;
+        iccplayer.playVideo = function() {
+          if (policy()) {
+            const err = new Error().stack;
+            if (err && err.indexOf('onPlayerReady_') !== -1) {
+              return iccplayer.stopVideo();
+            }
+          }
+          playVideo.apply(this, arguments);
+        };
+        // Method 2; stop subsequent plays
+        document.addEventListener('yt-page-data-fetched', () => policy() && iccplayer.stopVideo && iccplayer.stopVideo());
+      }
     }
     const observe = (object, property, callback) => {
       let value;
@@ -37,6 +48,7 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
               configurable: true,
               get: () => '0'
             });
+            config.args.fflags = config.args.fflags.replace('legacy_autoplay_flag=true', 'legacy_autoplay_flag=false');
           }
           if (document.cookie.includes('annotations=false')) {
             Object.defineProperty(config.args, 'iv_load_policy', {
@@ -44,9 +56,28 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
               get: () => '3'
             });
           }
-          config.args.fflags = config.args.fflags.replace('legacy_autoplay_flag=true', 'legacy_autoplay_flag=false');
+          if (document.cookie.includes('autobuffer=true')) {
+            delete config.args.ad3_module;
+          }
         }
       });
     });
   }`
 }));
+// autbuffer
+document.documentElement.appendChild(Object.assign(document.createElement('script'), {
+  textContent: `
+    yttools.push(e => {
+      let proceed = true;
+      if (document.cookie.includes('autobuffer=true')) {
+        e.addEventListener('onStateChange', () => {
+          if (proceed) {
+            proceed = false;
+            e.pauseVideo();
+            console.log('ddddone');
+          }
+        });
+        e.pauseVideo();
+      }
+    });
+`}));
