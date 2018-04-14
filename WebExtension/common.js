@@ -89,6 +89,19 @@ chrome.browserAction.onClicked.addListener(() => {
   });
 });
 
+chrome.commands.onCommand.addListener(command => chrome.tabs.query({
+  url: '*://www.youtube.com/watch*'
+}, tabs => {
+  const tab = tabs.filter(t => t.audible).pop() || tabs.pop();
+  if (tab) {
+    console.log(command);
+    chrome.tabs.sendMessage(tab.id, {
+      method: 'command',
+      command
+    });
+  }
+}));
+
 // FAQs & Feedback
 chrome.storage.local.get({
   'version': null,

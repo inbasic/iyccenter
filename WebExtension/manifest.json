@@ -48,6 +48,25 @@
     "default_title": "YouTube Control Center\n\n-> Opens YouTube when no player is detected.\n-> Displays the control popup when there is at least one YouTube player"
   },
   "homepage_url": "http://add0n.com/control-center.html",
+
+  "commands": {
+    "pause": {
+      "description": "Stat the player"
+    },
+    "stop": {
+      "description": "Stop the player"
+    },
+    "play": {
+      "description": "Pause the player"
+    },
+    "next": {
+      "description": "Move to the next track"
+    },
+    "previous": {
+      "description": "Move to the previous track"
+    }
+  },
+
   "applications": {
     "gecko": {
       "id": "jid1-CikLKKPVkw6ipw@jetpack",

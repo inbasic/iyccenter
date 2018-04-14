@@ -2,7 +2,6 @@
 
 window.addEventListener('message', e => {
   if (e.data && e.data.method === 'state') {
-    console.log(e.data);
     chrome.runtime.sendMessage(e.data);
   }
 });
@@ -97,6 +96,7 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
 }));
 
 chrome.runtime.onMessage.addListener(request => {
+  console.log(request);
   if (request.method === 'get-state' || request.method === 'command') {
     window.postMessage(request, '*');
   }
