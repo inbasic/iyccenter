@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  </head>
+  <body data-loading=true>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        margin: 0;
+        font: 400 13px/24px Roboto,sans-serif;
+      }
+      body[data-loading="true"] {
+        background: url(loading.gif) center center no-repeat;
+      }
+      header {
+        height: 46px;
+        background-color: #4d8eee;
+        color: #fff;
+        font-size: 120%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      tr:nth-child(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 42px;
+        line-height: 42px;
+      }
+      td:first-child {
+        padding-left: 10px;
+      }
+      .content {
+        flex: 1;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      div {
+        display: flex;
+        justify-content: flex-end;
+      }
+      td a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #000;
+      }
+      footer {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      footer a,
+      footer a:visited {
+        color: #4d8eee;
+      }
+    </style>
+    <header>History</header>
+    <div class="content">
+      <table>
+        <colgroup>
+          <col width="60px">
+          <col>
+        </colgroup>
+        <tbody></tbody>
+      </table>
+    </div>
+    <footer>
+      <a href="https://www.youtube.com/feed/history">YouTube History</a>
+    </footer>
+    <script src="index.js"></script>
+  </body>
+</html>

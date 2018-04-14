@@ -5,23 +5,23 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
   textContent: `{
     // stop the new layer from starting the video
     if (document.cookie.includes('autoplay=false')) {
-      if (typeof iccplayer !== 'undefined') {
+
+      var yttools = yttools || [];
+      yttools.push(e => {
         // Method 0
-        iccplayer.stopVideo();
+        e.stopVideo();
         // Method 1; prevent polymer from starting video
-        const playVideo = iccplayer.playVideo;
-        iccplayer.playVideo = function() {
-          if (policy()) {
-            const err = new Error().stack;
-            if (err && err.indexOf('onPlayerReady_') !== -1) {
-              return iccplayer.stopVideo();
-            }
+        const playVideo = e.playVideo;
+        e.playVideo = function() {
+          const err = new Error().stack;
+          if (err && err.indexOf('onPlayerReady_') !== -1) {
+            return e.stopVideo();
           }
           playVideo.apply(this, arguments);
         };
         // Method 2; stop subsequent plays
-        document.addEventListener('yt-page-data-fetched', () => policy() && iccplayer.stopVideo && iccplayer.stopVideo());
-      }
+        document.addEventListener('yt-page-data-fetched', () => e.stopVideo && e.stopVideo());
+      });
     }
     const observe = (object, property, callback) => {
       let value;

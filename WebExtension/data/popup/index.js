@@ -2,6 +2,15 @@
 
 var tabId;
 
+var iframe = {
+  e: document.querySelector('iframe'),
+  show: path => {
+    iframe.e.src = path;
+  },
+  hide: () => iframe.e.src = ''
+};
+document.addEventListener('click', () => iframe.hide());
+
 document.getElementById('progress').addEventListener('click', ({offsetX, target}) => {
   if (tabId) {
     chrome.tabs.sendMessage(tabId, {
@@ -13,6 +22,7 @@ document.getElementById('progress').addEventListener('click', ({offsetX, target}
 });
 
 const state = () => {
+  //console.log('here');
   if (tabId) {
     chrome.tabs.sendMessage(tabId, {
       method: 'get-state'
@@ -28,24 +38,44 @@ const state = () => {
           method: 'get-state'
         });
       }
+      document.body.dataset.player = Boolean(tab);
     });
   }
 };
 window.setInterval(state, 1000);
 
+var id = null;
+
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.method === 'state') {
+    const title = request.data ? request.data.title : sender.tab.title.replace(' - YouTube', '');
+    if (request.data && request.data.video_id !== id) {
+      id = request.data.video_id;
+      document.getElementById('cover').style['background-image'] =
+        `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
+    }
+
     tabId = sender.tab.id;
-    document.getElementById('title').textContent = sender.tab.title.replace(' - YouTube', '');
+    document.getElementById('title').textContent = (title || 'video title is not available yet!');
     document.querySelector('#progress div').style.width = request.time.current / request.time.duration * 100 + '%';
     document.getElementById('play').dataset.state = request.state === 1 ? 'play' : 'pause';
   }
 });
-state();
+document.addEventListener('DOMContentLoaded', state);
 
 document.addEventListener('click', ({target}) => {
   const cmd = target.dataset.cmd;
-  if (cmd && tabId) {
+  if (cmd === 'back') {
+    document.body.style.transform = 'translateX(-400px)';
+  }
+  else if (cmd === 'move-to-settings') {
+    document.body.style.transform = 'translateX(0)';
+  }
+  else if (cmd === 'move-to-history') {
+    document.body.style.transform = 'translateX(-800px)';
+    iframe.show('history/index.html');
+  }
+  else if (cmd && tabId) {
     chrome.tabs.sendMessage(tabId, {
       method: 'command',
       command: cmd === 'play' ? target.dataset.state : cmd
@@ -75,6 +105,10 @@ document.getElementById('player').addEventListener('toggle', e => {
 try {
   document.getElementById('page').open = localStorage.getItem('page.toggle') === 'true';
   document.getElementById('player').open = localStorage.getItem('player.toggle') === 'true';
+
+  if (localStorage.getItem('player.toggle') === null) {
+    document.getElementById('player').open = true;
+  }
 }
 catch (e) {}
 
@@ -102,3 +136,5 @@ chrome.storage.local.get({
     }
   });
 });
+
+

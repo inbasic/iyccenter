@@ -1,28 +1,99 @@
 body {
   margin: 0;
-  font-family: "Helvetica Neue",Helvetica,sans-serif;
-  font-size: 13px;
-  width: 400px;
+  font: 400 13px/24px Roboto,sans-serif;
   background-color: #fff;
+  overflow: hidden;
+  width: 400px;
+  transition: all 0.3s ease-out;
+  transform:  translateX(-400px);
 }
+h3 {
+  font-weight: 400;
+  font-size: 140%;
+  padding: 10px 20px;
+  margin: 0;
+}
+body>div {
+  min-width: 400px;
+}
+header {
+  height: 46px;
+  background-color: #4d8eee;
+  color: #fff;
+  font-size: 120%;
+}
+input[type=button] {
+  outline: none;
+  border: solid 1px #c5c5c5;
+  background-color: #fff;
+  min-width: 80px;
+  cursor: pointer;
+}
+input[type=button]:active {
+  opacity: 0.5;
+}
+
+label {
+  display: flex;
+  align-items: center;
+}
+label[type=checkbox]>span {
+  display: inline-block;
+  background-image: url('icons/uchecked.png');
+  background-repeat: no-repeat;
+  background-position: left center;
+  height: 32px;
+  width: 52px;
+  line-height: 32px;
+  cursor: pointer;
+}
+input:checked ~ span {
+  background-image: url('icons/checked.png');
+}
+label>input[type=checkbox] {
+  display: none;
+}
+
 summary {
   outline: none;
   cursor: pointer;
   user-select: none;
+  padding: 5px;
+  background: rgba(0,0,0,0.05);
 }
-#info td:first-child,
-#player td:last-child,
-#page td:last-child {
-  white-space: nowrap;
-  width: 1px;
-  padding-right: 10px;
+
+select {
+  outline: none;
 }
-#player td:last-child {
-  text-align: right;
+
+#cover {
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 285px;
+  position: relative;
+}
+
+#move-to-settings,
+#move-to-history {
+  position: absolute;
+  top: 15px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+#move-to-settings {
+  left: 15px;
+  background: url(icons/settings.svg) center center no-repeat;
+  background-size: 32px;
+}
+#move-to-history {
+  right: 15px;
+  background: url(icons/history.svg) center center no-repeat;
+  background-size: 25px;
 }
 
 #controls {
-  margin: 10px;
+  margin: 30px;
 }
 #backward,
 #forward,
@@ -33,7 +104,6 @@ summary {
   background-repeat: no-repeat;
   width: 32px;
   height: 32px;
-  background-color: #0094ff;
   display: inline-block;
   border-radius: 50%;
   transition: opacity 0.5s ease;
@@ -48,15 +118,17 @@ summary {
 #play {
   background-image: url(icons/pause.svg);
   background-position: center center;
-  background-size: 20px;
-  width: 64px;
-  height: 64px;
-  margin: 0 10px;
+  background-size: 15px;
+  width: 52px;
+  height: 52px;
+  margin: 0 30px;
+  box-shadow: 0 0 16px 1px #0094ff5e;
+  background-color: transparent;
 }
 #play[data-state=pause] {
   background-image: url(icons/play.svg);
-  background-position: left 18px center;
-  background-size: 32px;
+  background-position: left 19px center;
+  background-size: 20px;
 }
 #backward {
   background-image: url(icons/backward.svg);
@@ -72,35 +144,71 @@ summary {
   margin-left: 5px;
 }
 
-#info {
-  margin: 5px 0;
-  border: solid 1px #c5c5c5;
-  height: 18px;
-  line-height: 18px;
-  background-color: #f1f1f1;
-  border-left: none;
-  border-right: none;
-  padding: 0 5px;
-}
-
 #progress {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #c1c1c1;
+  border-radius: 2px;
+  cursor: pointer;
+  margin: 0 20px;
 }
 #progress div {
-  height: 10px;
-  background-color: rgba(0, 0, 0, 0.1);
+  height: 4px;
+  background-color: #4d8eee;
   width: 0%;
   pointer-events: none;
+  border-radius: 2px;
+}
+
+#tools {
+  padding: 5px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#title {
+  padding: 20px 10px;
+  font-size: 130%;
+}
+#history,
+#settings {
+  position: relative;
+}
+#back,
+#for {
+  position: absolute;
+  top: 8px;
+  background-size: 32px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+#back {
+  right: 14px;
+  background: url(icons/back.svg) center center no-repeat;
+}
+#for {
+  left: 14px;
+  background: url(icons/for.svg) center center no-repeat;
 }
 
 [hbox] {
   display: flex;
 }
+[vbox] {
+  display: flex;
+  flex-direction: column;
+}
 [pack=center] {
   justify-content: center;
 }
+[pack=end] {
+  justify-content: flex-end;
+}
 [align=center] {
   align-items: center;
+}
+[align=end] {
+  align-items: flex-end;
 }
 [flex="1"] {
   flex: 1;
@@ -108,5 +216,21 @@ summary {
 
 #player,
 #page {
-  padding: 10px;
+  padding-left: 15px;
+}
+#page {
+  padding-bottom: 15px;
+}
+
+body[data-player=false] #controls,
+body[data-player=false] #info {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #fff;
 }

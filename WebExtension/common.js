@@ -75,7 +75,7 @@ if (chrome.app && chrome.app.getDetails) {
 chrome.runtime.onMessage.addListener(request => {
   if (request.method === 'page-removed' || request.method === 'page-added') {
     window.setTimeout(() => chrome.tabs.query({
-      url: '*://www.youtube.com/watch*'
+      url: '*://www.youtube.com/*'
     }, tabs => {
       chrome.browserAction.setPopup({
         popup: tabs.length ? '/data/popup/index.html' : ''

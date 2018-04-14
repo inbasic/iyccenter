@@ -2,6 +2,7 @@
 
 window.addEventListener('message', e => {
   if (e.data && e.data.method === 'state') {
+    console.log(e.data);
     chrome.runtime.sendMessage(e.data);
   }
 });
@@ -26,7 +27,8 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
           method: 'state',
           state,
           fake,
-          time: e.getProgressState()
+          time: e.getProgressState(),
+          data: e.getVideoData()
         }, '*');
       };
       report(true);
@@ -58,7 +60,6 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
               e.nextVideo();
             }
             else if (data.command === 'seek-to') {
-              console.log(data.percent , e.getDuration())
               e.seekTo(parseInt(data.percent * e.getDuration()));
             }
           }

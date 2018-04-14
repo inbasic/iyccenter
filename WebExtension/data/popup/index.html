@@ -4,49 +4,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="index.css">
   </head>
-  <body>
-    <div id="controls" hbox align=center pack=center>
-      <span id="backward" data-cmd="previous"></span>
-      <span id="play" data-cmd="play"></span>
-      <span id="forward" data-cmd="next"></span>
-      <span id="stop" data-cmd="stop"></span>
-    </div>
-    <table id="info" width=100%>
-      <tr>
-        <td>Title</td>
-        <td id="title">-</td>
-      </tr>
-      <tr>
-        <td>Duration</td>
-        <td>
-        <div id="progress">
-          <div></div>
-        </div>
-        </td>
-      </tr>
-    </table>
-    <details open id="player">
-      <summary>Player settings</summary>
-      <table width=100%>
-        <tr>
-          <td>Use wide screen (refresh tab)</td>
-          <td><input type="checkbox" name="wide"></td>
-        </tr>
-        <tr>
-          <td>Auto play video (refresh tab)</td>
-          <td><input type="checkbox" name="autoplay"></td>
-        </tr>
-        <tr>
-          <td>Buffer video without starting it (refresh tab)</td>
-          <td><input type="checkbox" name="autobuffer"></td>
-        </tr>
-        <tr>
-          <td>Show video annotations (refresh tab)</td>
-          <td><input type="checkbox" name="annotations"></td>
-        </tr>
-        <tr>
-          <td>Suggested playback quality</td>
-          <td>
+  <body hbox>
+    <div>
+      <header hbox pack=center align=center id="settings">Settings</header>
+      <div id="back" data-cmd="back"></div>
+      <h3>Player</h3>
+      <div id="player">
+        <label type=checkbox>
+          <input type="checkbox" name="wide">
+          <span></span>
+          Use wide screen (refresh tab)
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="autoplay">
+          <span></span>
+          Auto play video (refresh tab)
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="autobuffer">
+          <span></span>
+          Buffer video without starting it (refresh tab)
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="annotations">
+          <span></span>
+          Show video annotations (refresh tab)
+        </label>
+        <label style="text-indent: 52px; padding-right: 15px" hbox>
+          <span flex=1>Playback quality:</span>
           <select id="quality">
             <option value="default">Default</option>
             <option value="highest">Highest Resolution</option>
@@ -59,39 +44,66 @@
             <option value="small">Small</option>
             <option value="tiny">Tiny</option>
           </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Auto play next video</td>
-          <td><input type="checkbox" name="next"></td>
-        </tr>
-      </table>
-    </details>
-    <details open id="page">
-      <summary>Page settings</summary>
-      <table width=100%>
-        <tr>
-          <td>Display "search bar"</td>
-          <td><input type="checkbox" name="searchbar"></td>
-        </tr>
-        <tr>
-          <td>Display "video suggestions" sidebar</td>
-          <td><input type="checkbox" name="sidebar"></td>
-        </tr>
-        <tr>
-          <td>Display "video comments" pane</td>
-          <td><input type="checkbox" name="comments"></td>
-        </tr>
-        <tr>
-          <td>Display "video view info" pane</td>
-          <td><input type="checkbox" name="info"></td>
-        </tr>
-        <tr>
-          <td>Display "details" pane (published info, buy video, ...)</td>
-          <td><input type="checkbox" name="details"></td>
-        </tr>
-      </table>
-    </details>
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="next">
+          <span></span>
+          Auto play next video
+        </label>
+      </div>
+      <h3>Page</h3>
+      <div id="page">
+        <label type=checkbox>
+          <input type="checkbox" name="searchbar">
+          <span></span>
+          Display "search bar"
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="sidebar">
+          <span></span>
+          Display "video suggestions" sidebar
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="comments">
+          <span></span>
+          Display "video comments" pane
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="info">
+          <span></span>
+          Display "video view info" pane
+        </label>
+        <label type=checkbox>
+          <input type="checkbox" name="details">
+          <span></span>
+          Display "details" pane (published info, buy video, ...)
+        </label>
+      </div>
+    </div>
+
+    <div vbox>
+      <div id="cover">
+        <div id="move-to-settings" data-cmd="move-to-settings"></div>
+        <div id="move-to-history" data-cmd="move-to-history"></div>
+      </div>
+      <div id=info vbox flex=1>
+        <div id=title hbox align="center" pack=center flex="1"></div>
+        <div id="progress">
+          <div></div>
+        </div>
+      </div>
+      <div id="controls" hbox align=center pack=center>
+        <span id="backward" data-cmd="previous"></span>
+        <span id="play" data-cmd="play"></span>
+        <span id="forward" data-cmd="next"></span>
+        <span id="stop" data-cmd="stop"></span>
+      </div>
+    </div>
+    <div id=history>
+      <div id="for" data-cmd=back></div>
+      <iframe src=""></iframe>
+    </div>
+
     <script src="index.js"></script>
   </body>
 </html>
