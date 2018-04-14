@@ -96,7 +96,6 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
 }));
 
 chrome.runtime.onMessage.addListener(request => {
-  console.log(request);
   if (request.method === 'get-state' || request.method === 'command') {
     window.postMessage(request, '*');
   }

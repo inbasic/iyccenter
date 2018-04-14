@@ -74,7 +74,6 @@ document.documentElement.appendChild(Object.assign(document.createElement('scrip
           if (proceed) {
             proceed = false;
             e.pauseVideo();
-            console.log('ddddone');
           }
         });
         e.pauseVideo();

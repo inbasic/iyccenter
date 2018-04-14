@@ -48,11 +48,13 @@ var id = null;
 
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.method === 'state') {
-    const title = request.data ? request.data.title : sender.tab.title.replace(' - YouTube', '');
+    const title = (request.data ? request.data.title : '') || sender.tab.title.replace(' - YouTube', '');
     if (request.data && request.data.video_id !== id) {
       id = request.data.video_id;
-      document.getElementById('cover').style['background-image'] =
-        `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
+      window.setTimeout(() => {
+        document.getElementById('cover').style['background-image'] =
+          `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
+      });
     }
 
     tabId = sender.tab.id;

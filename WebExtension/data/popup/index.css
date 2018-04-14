@@ -222,6 +222,14 @@ select {
   padding-bottom: 15px;
 }
 
+body[data-player=false] #cover::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: 'Please start a YouTube video on a browser tab for the controls to appear';
+  margin: 40px 20px;
+  line-height: 16px;
+}
 body[data-player=false] #controls,
 body[data-player=false] #info {
   opacity: 0.2;
