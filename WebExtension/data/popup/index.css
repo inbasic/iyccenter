@@ -122,7 +122,7 @@ select {
   width: 52px;
   height: 52px;
   margin: 0 30px;
-  box-shadow: 0 0 16px 1px #0094ff5e;
+  box-shadow: 0 0 16px 1px rgba(0, 148, 255, 0.37);
   background-color: transparent;
 }
 #play[data-state=pause] {

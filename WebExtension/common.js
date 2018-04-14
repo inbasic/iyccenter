@@ -104,7 +104,7 @@ chrome.commands.onCommand.addListener(command => chrome.tabs.query({
 // FAQs & Feedback
 chrome.storage.local.get({
   'version': null,
-  'faqs': navigator.userAgent.indexOf('Firefox') === -1,
+  'faqs': true,
   'last-update': 0,
 }, prefs => {
   const version = chrome.runtime.getManifest().version;
