@@ -5,7 +5,6 @@ body {
   overflow: hidden;
   width: 400px;
   transition: all 0.3s ease-out;
-  transform:  translateX(-400px);
 }
 h3 {
   font-weight: 400;
@@ -15,6 +14,7 @@ h3 {
 }
 body>div {
   min-width: 400px;
+  overflow: hidden;
 }
 header {
   height: 46px;
@@ -214,10 +214,12 @@ select {
   flex: 1;
 }
 
+#extension,
 #player,
 #page {
   padding-left: 15px;
 }
+#extension,
 #page {
   padding-bottom: 15px;
 }
@@ -241,4 +243,16 @@ iframe {
   height: 100%;
   border: none;
   background-color: #fff;
+}
+
+body[data-view=controls] {
+  height: 450px;
+  transform: translateX(-400px);
+}
+body[data-view=settings] {
+  transform: translateX(0);
+}
+
+body[data-view=history] {
+  transform: translateX(-800px);
 }

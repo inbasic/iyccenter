@@ -51,10 +51,15 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     const title = (request.data ? request.data.title : '') || sender.tab.title.replace(' - YouTube', '');
     if (request.data && request.data.video_id !== id) {
       id = request.data.video_id;
-      window.setTimeout(() => {
-        document.getElementById('cover').style['background-image'] =
-          `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
-      });
+      if (localStorage.getItem('thumbnail') !== 'false') {
+        window.setTimeout(() => {
+          document.getElementById('cover').style['background-image'] =
+            `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
+        });
+      }
+      else {
+        document.getElementById('cover').style['background-image'] = 'url(icons/cover.jpg)';
+      }
     }
 
     tabId = sender.tab.id;
@@ -68,13 +73,13 @@ document.addEventListener('DOMContentLoaded', state);
 document.addEventListener('click', ({target}) => {
   const cmd = target.dataset.cmd;
   if (cmd === 'back') {
-    document.body.style.transform = 'translateX(-400px)';
+    document.body.dataset.view = 'controls';
   }
   else if (cmd === 'move-to-settings') {
-    document.body.style.transform = 'translateX(0)';
+    document.body.dataset.view = 'settings';
   }
   else if (cmd === 'move-to-history') {
-    document.body.style.transform = 'translateX(-800px)';
+    document.body.dataset.view = 'history';
     iframe.show('history/index.html');
   }
   else if (cmd && tabId) {
@@ -90,6 +95,9 @@ document.addEventListener('change', ({target}) => {
     chrome.storage.local.set({
       [target.name]: target.checked
     });
+    if (target.name === 'thumbnail') {
+      localStorage.setItem('thumbnail', target.checked);
+    }
   }
   else if (target.id) {
     chrome.storage.local.set({
@@ -127,7 +135,9 @@ chrome.storage.local.get({
   sidebar: true,
   comments: true,
   info: true,
-  details: true
+  details: true,
+  // extension
+  thumbnail: true
 }, prefs => {
   Object.entries(prefs).forEach(([key, value]) => {
     if (typeof value === 'string') {
@@ -138,5 +148,3 @@ chrome.storage.local.get({
     }
   });
 });
-
-

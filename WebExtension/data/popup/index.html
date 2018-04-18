@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="index.css">
   </head>
-  <body hbox>
+  <body hbox data-view="controls">
     <div>
       <header hbox pack=center align=center id="settings">Settings</header>
       <div id="back" data-cmd="back"></div>
@@ -77,6 +77,14 @@
           <input type="checkbox" name="details">
           <span></span>
           Display "details" pane (published info, buy video, ...)
+        </label>
+      </div>
+      <h3>Extension</h3>
+      <div id="extension">
+        <label type=checkbox>
+          <input type="checkbox" name="thumbnail">
+          <span></span>
+          Display "video thumbnail" (reopen the popup)
         </label>
       </div>
     </div>
