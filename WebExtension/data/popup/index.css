@@ -69,7 +69,7 @@ select {
 #cover {
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 285px;
+  min-height: 301px;
   position: relative;
 }
 
@@ -80,21 +80,22 @@ select {
   width: 32px;
   height: 32px;
   cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(37, 37, 37, 0.25);
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 #move-to-settings {
   left: 15px;
-  background: url(icons/settings.svg) center center no-repeat;
+  background-image: url(icons/settings.svg);
   background-size: 32px;
 }
 #move-to-history {
   right: 15px;
-  background: url(icons/history.svg) center center no-repeat;
-  background-size: 25px;
+  background-image: url(icons/history.svg);
+  background-size: 26px;
 }
 
-#controls {
-  margin: 30px;
-}
 #backward,
 #forward,
 #stop,
@@ -168,6 +169,9 @@ select {
 #title {
   padding: 20px 10px;
   font-size: 130%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 #history,
 #settings {
@@ -246,7 +250,7 @@ iframe {
 }
 
 body[data-view=controls] {
-  height: 450px;
+  height: 500px;
   transform: translateX(-400px);
 }
 body[data-view=settings] {

@@ -94,13 +94,15 @@
         <div id="move-to-settings" data-cmd="move-to-settings"></div>
         <div id="move-to-history" data-cmd="move-to-history"></div>
       </div>
-      <div id=info vbox flex=1>
-        <div id=title hbox align="center" pack=center flex="1"></div>
+      <div id=info vbox>
+        <div hbox align="center" pack=center flex="1">
+          <span id=title></span>
+        </div>
         <div id="progress">
           <div></div>
         </div>
       </div>
-      <div id="controls" hbox align=center pack=center>
+      <div id="controls" hbox align=center pack=center  flex=1>
         <span id="backward" data-cmd="previous"></span>
         <span id="play" data-cmd="play"></span>
         <span id="forward" data-cmd="next"></span>

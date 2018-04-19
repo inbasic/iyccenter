@@ -3,7 +3,7 @@
   "short_name": "iycc",
   "description": "YouTube popup pause and resume as well as no buffer, HD quality, wide screen, ...",
   "author": "InBasic",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "manifest_version": 2,
   "permissions": [
     "storage",
