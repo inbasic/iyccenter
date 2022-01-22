@@ -1,16 +1,16 @@
 ## YouTube Control Center (iyccenter)
-YouTube Control Center provides a set of useful tools for [YouTube.com](http://www.youtube.com).
+YouTube Control Center provides a set of useful tools for [YouTube.com](https://www.youtube.com).
 
 ### General information
 To compile iyccenter project you need to have these packages and libraries installed:
-* [python](http://www.python.org/getit/)
-* [nodejs](http://nodejs.org/)
-* [Mozilla addon-sdk](https://addons.mozilla.org/en-US/developers/builder)
+* [python](https://www.python.org/getit/)
+* [nodejs](https://nodejs.org/)
+* [Mozilla addon-sdk](https://addons.mozilla.org/developers/builder)
   
 Folders description:
 * src: source code
 * compile: nodejs compiler
-* ../addon-sdk-*: latest version of [Mozilla addon-sdk](https://addons.mozilla.org/en-US/developers/builder).
+* ../addon-sdk-*: latest version of [Mozilla addon-sdk](https://addons.mozilla.org/developers/builder).
 * preview: screenshots
 * template: bootstrap folder
 
